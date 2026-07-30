@@ -1,0 +1,20 @@
+{
+  "name": "viralhunt",
+  "version": "0.1.0",
+  "description": "Discover trending/viral content across TikTok, Instagram, X, Facebook, Pinterest and Reddit, and schedule or publish posts to your connected social accounts — via the ViralHunt.io API.",
+  "author": {
+    "name": "ViralHunt",
+    "url": "https://viralhunt.io"
+  },
+  "homepage": "https://viralhunt.io",
+  "keywords": [
+    "social-media",
+    "trending",
+    "viral",
+    "scheduler",
+    "tiktok",
+    "instagram",
+    "content-marketing",
+    "buzzsumo-alternative"
+  ]
+}
