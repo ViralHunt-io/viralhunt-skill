@@ -106,7 +106,24 @@ If you have a local file instead of a URL:
 `POST schedule.php?action=upload` — multipart form field `file` (jpg/png/gif/webp/mp4/mov,
 ≤50MB). Returns `{ "url": "https://..." }`. Pass that URL in `media` on create.
 
-## 6. Check status
+## 6. Edit or cancel a scheduled post
+
+Posts can be edited ONLY while their status is `scheduled` (not yet publishing), and PostProxy
+won't allow an edit less than ~5 minutes before publish time.
+
+- **Cancel:** `POST schedule.php?action=cancel` — `{"id": 123}`. Cancels the not-yet-published
+  targets. If everything already published you get `409 already_published`.
+- **Update:** `POST schedule.php?action=update` — `{"id": 123, "body": "...", "media": ["..."],
+  "networks": ["facebook"], "scheduled_at": "2026-08-01T15:30:00Z"}`. Only the fields you send
+  change. The project cannot be changed.
+
+Agent rules:
+- Before editing, `GET schedule.php?action=get&id=123` and confirm status is `scheduled`.
+- On `409` (already publishing/published or too close to publish time), re-fetch and tell the
+  user — never retry an update blindly.
+- After any edit, `GET` again and confirm the change landed before reporting done.
+
+## 7. Check status
 
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
