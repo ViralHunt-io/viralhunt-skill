@@ -31,7 +31,7 @@ Full API docs: **https://viralhunt.io/api**
 Add the marketplace, then install the plugin:
 
 ```
-/plugin marketplace add viralhunt/viralhunt-skill
+/plugin marketplace add rodvan/viralhunt-skill
 /plugin install viralhunt
 ```
 
