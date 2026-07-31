@@ -6,6 +6,9 @@ description: >-
   social accounts — powered by the ViralHunt.io API. Use this whenever the user
   wants to find viral or trending content in a niche, research what's performing
   on social right now, or draft/schedule/publish social posts across networks.
+license: MIT
+metadata:
+  author: rodvan
 ---
 
 # ViralHunt
