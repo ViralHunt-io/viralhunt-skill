@@ -8,7 +8,7 @@ description: >-
   on social right now, or draft/schedule/publish social posts across networks.
 license: MIT
 metadata:
-  author: rodvan
+  author: viralhunt-io
 ---
 
 # ViralHunt
