@@ -131,6 +131,40 @@ Agent rules:
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
 
+## 8. Content templates (make the image, don't just write the caption)
+
+ViralHunt ships **layout templates** — HTML + CSS + a variable manifest — so the graphics you
+produce are on-brand and pixel-exact. ViralHunt does **not** render them: you do.
+
+`GET templates.php` → the library (lean: no html/css, so it doesn't flood your context).
+`GET templates.php?slug=vh-image-card` → **that one template's full spec**, including `html`,
+`css`, `variables`, `formats`, `palette`, `fonts` and `render_tech`.
+
+Filters: `category`, `media_type=image|video`, `network`, `q`, and
+`assigned=1&project_id=N` (only the templates that project is allowed to use).
+
+**The render loop:**
+
+1. `GET templates.php?assigned=1&project_id=N` → pick a template for what you're posting.
+2. `GET templates.php?slug=…` → read `variables`, `html`, `css`, `formats`, `render_tech`.
+3. Generate a value for **every** variable, obeying its `description` and its `rules`
+   (`max_chars`, `no_em_dash`, `must_appear_in`, `enum`…). `rules` are hard constraints — if a
+   value breaks one, fix it before rendering, and use the variable's `fallback` if generation
+   fails. Never invent values for a variable bound to a `content_source` (a curated bank);
+   read them from that bank in order and stop when it's exhausted.
+4. Replace every `{{key}}` in `html` with your value, include the `css`, pick a size from
+   `formats` (each entry carries `w`, `h` and the `networks` it suits).
+5. Render as `render_tech` says — for image templates that's headless Chrome at the format's
+   `w`×`h`: load the html+css, **wait for `[data-vh-ready="1"]`** (the template sets it once its
+   fonts and images have loaded and the headline has auto-shrunk), then screenshot the
+   `.vh-card` element. Screenshotting earlier gives you a blank or badly-typeset card.
+6. Upload the PNG (`POST schedule.php?action=upload`) and pass the returned URL in `media` on
+   `schedule.php?action=create`.
+
+The `fonts` array carries woff2 URLs and the `css` already `@font-face`s them, so the render is
+identical everywhere — don't substitute local fonts. Colors are **tokens**, not hex: a variable
+of `type: "token"` takes a key from `palette` (e.g. `"cyan"`), never `#1edbee`.
+
 ## Editorial board (optional)
 
 You can also organize work on the user's kanban board instead of publishing directly:
