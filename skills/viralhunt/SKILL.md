@@ -165,6 +165,10 @@ The `fonts` array carries woff2 URLs and the `css` already `@font-face`s them, s
 identical everywhere — don't substitute local fonts. Colors are **tokens**, not hex: a variable
 of `type: "token"` takes a key from `palette` (e.g. `"cyan"`), never `#1edbee`.
 
+To change which templates a project may use (owner/admin only):
+`POST template-assignments.php` — `{"project_id": 1, "template_id": 7, "action": "add"|"remove"}`.
+Humans do the same from **Templates** in the app.
+
 ## Editorial board (optional)
 
 You can also organize work on the user's kanban board instead of publishing directly:
