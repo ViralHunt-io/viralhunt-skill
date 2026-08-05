@@ -165,6 +165,21 @@ The `fonts` array carries woff2 URLs and the `css` already `@font-face`s them, s
 identical everywhere — don't substitute local fonts. Colors are **tokens**, not hex: a variable
 of `type: "token"` takes a key from `palette` (e.g. `"cyan"`), never `#1edbee`.
 
+**Authoring your own templates** (owner/admin): `POST templates.php` with
+`{"action":"create"|"update", "slug", "name", "category", "html", "css", "variables", …}`.
+Editing a curated/global template **clones it into the org's own copy** — the global is
+never modified, and on `update` you may send only the fields that change.
+
+Two rules the API enforces, so design for them:
+- Every `{{placeholder}}` in `html` must be declared in `variables`, or the call is
+  rejected. A template with an undeclared hole would render blank for whoever fetches it.
+- `html` and `css` are capped at 256KB each. Reference images and fonts by URL — the
+  `fonts` array is how a font travels with the template.
+
+Write the manifest as carefully as the layout: `description` is the instruction another
+agent (or you, later) will generate from, and `rules` are the hard constraints it must
+satisfy. A template whose manifest just says "text" produces bad cards.
+
 To change which templates a project may use (owner/admin only):
 `POST template-assignments.php` — `{"project_id": 1, "template_id": 7, "action": "add"|"remove"}`.
 Humans do the same from **Templates** in the app.
