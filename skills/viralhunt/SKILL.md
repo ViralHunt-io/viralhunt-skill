@@ -55,13 +55,21 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{â€
   `per_page=N` (max 100)
 
 **Growth (`growth_24h`).** Every post can carry `growth_24h`: how much it moved between our two
-most distant readings, `{from, to, delta, percent, hours, measured_at, samples}`. Three rules:
+most distant readings, `{from, to, delta, percent, hours, measured_at, samples}`. Five rules:
 - `null` means **we cannot say** (only one reading, or a network with no snapshots: Facebook,
   Pinterest, Tumblr). It does **not** mean zero. Never render it as 0%.
-- `hours` is the **real** window between the two readings. It is often less than 24. Quote it
-  ("+340% in 9h"), never assume 24.
-- `percent` is `null` when the post started from zero (division by zero); `delta` still holds the
-  absolute change and is the number to report then.
+- `delta: 0` with `samples >= 2` means **measured and unchanged**: two readings, same number. That
+  is a fact about the post (it is not moving), not missing data. Say "flat", not "no data".
+- `hours` is the **real** window between the two readings. The comparison point is the newest
+  reading at least 20 hours older than the latest one; when no reading is that old yet (a post
+  we found a few hours ago), the oldest reading is used and `hours` says how short the window
+  really is. It is often less than 24. Quote it ("+340% in 9h"), never assume 24. The field is
+  named for the target window, not a promise.
+- `percent` is `null` when `from` is under 100: from zero it is a division by zero, and from a
+  handful of interactions it is noise (70 to 188,247 is a real climb, "+268,824%" is not a
+  sentence anyone should print). `delta` always holds the absolute change and is the number to
+  report then.
+- `samples` is how many readings the window spans; 2 is the minimum that can say anything.
 A large `delta` over few `hours` is what "going viral right now" looks like; prefer it over raw
 totals when the user asks what is *rising*.
 
