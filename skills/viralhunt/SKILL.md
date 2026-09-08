@@ -49,7 +49,8 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{â€
   `most_upvoted` (reddit), `most_boosted` (mastodon), `most_noted` (tumblr), `most_points`
   (hackernews); for `rss`: `trending`, `engagement`, `growth`, `bluesky`, `mentions`, `coverage`,
   `hn`, `comments`
-- `time_range`: `6h` | `12h` | `24h` | `7d` | `30d` | `3m` | `all` (on the post's own publish date)
+- `time_range`: `6h` | `12h` | `24h` | `7d` | `30d` | `3m` | `all` (on the post's own publish date).
+  Tumblr's corpus fills slowly, so `7d` can be empty there: use `30d` or `all` for `tumblr`.
 - optional: `keyword=...`, `min_engagement=N`, `subreddit=name` (reddit), `page=N`,
   `per_page=N` (max 100)
 
