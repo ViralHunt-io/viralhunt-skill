@@ -64,7 +64,10 @@ most distant readings, `{from, to, delta, percent, hours, measured_at, samples}`
   reading at least 20 hours older than the latest one; when no reading is that old yet (a post
   we found a few hours ago), the oldest reading is used and `hours` says how short the window
   really is. It is often less than 24. Quote it ("+340% in 9h"), never assume 24. The field is
-  named for the target window, not a promise.
+  named for the target window, not a promise. `full_window` is the machine-readable form: `true`
+  only when the window reached 20 hours or more. Say "in 24h" only when it is `true`; otherwise
+  say "in Nh". RSS posts near the top of `trending` are mostly under a day old and are read at
+  about 1h, 2h, 5h, 11h and 23h after discovery, so a short window there is the normal case.
 - `percent` is `null` when `from` is under 100: from zero it is a division by zero, and from a
   handful of interactions it is noise (70 to 188,247 is a real climb, "+268,824%" is not a
   sentence anyone should print). `delta` always holds the absolute change and is the number to
