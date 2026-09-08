@@ -1,7 +1,7 @@
 {
   "name": "viralhunt",
-  "version": "0.1.0",
-  "description": "Discover trending/viral content across TikTok, Instagram, X, Facebook, Pinterest and Reddit, and schedule or publish posts to your connected social accounts — via the ViralHunt.io API.",
+  "version": "0.2.0",
+  "description": "Discover trending/viral content across TikTok, Instagram, X, Facebook, Pinterest, Bluesky, Douyin, Reddit, Mastodon, Tumblr, Hacker News and news RSS; learn the best time to post, top hashtags, trending sounds and the best communities for a topic; and schedule or publish posts to your connected social accounts via the ViralHunt.io API.",
   "author": {
     "name": "ViralHunt",
     "url": "https://viralhunt.io"
