@@ -2,10 +2,13 @@
 name: viralhunt
 description: >-
   Discover what's trending/going viral across TikTok, Instagram, X, Facebook,
-  Pinterest and Reddit, and schedule or publish posts to the user's own connected
-  social accounts — powered by the ViralHunt.io API. Use this whenever the user
-  wants to find viral or trending content in a niche, research what's performing
-  on social right now, or draft/schedule/publish social posts across networks.
+  Pinterest, Bluesky, Douyin, Reddit, Mastodon, Tumblr, Hacker News and news RSS,
+  learn the best time to post on each network from measured viral posts, find the
+  top hashtags, trending sounds and best communities, and schedule or publish posts
+  to the user's own connected social accounts — powered by the ViralHunt.io API.
+  Use this whenever the user wants to find viral or trending content in a niche,
+  research what's performing on social right now, ask when or where to post, or
+  draft/schedule/publish social posts across networks.
 license: MIT
 metadata:
   author: viralhunt-io
@@ -39,11 +42,35 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{�
 
 `GET trending.php?source=<network>&sort=<sort>&time_range=<range>`
 
-- `source`: `tiktok` | `instagram` | `x` | `facebook` | `pinterest` | `rss`
-- `sort`: `viral` (default), plus per-network options like `most_liked`, `most_viewed`,
-  `most_commented`, `newest`
-- `time_range`: `24h` | `7d` | `30d` | `3m` | `all`
-- optional: `keyword=...`, `min_engagement=N`, `page=N`, `per_page=N` (max 100)
+- `source`: `tiktok` | `instagram` | `x` | `facebook` | `pinterest` | `bluesky` | `douyin` |
+  `reddit` | `mastodon` | `tumblr` | `hackernews` | `rss`
+- `sort`: `viral` (default), `engagement`, `newest`, `oldest`, plus per network: `most_liked`,
+  `most_viewed`, `most_commented`, `most_retweeted`, `most_reposted`, `most_saved`,
+  `most_upvoted` (reddit), `most_boosted` (mastodon), `most_noted` (tumblr), `most_points`
+  (hackernews); for `rss`: `trending`, `engagement`, `growth`, `bluesky`, `mentions`, `coverage`,
+  `hn`, `comments`
+- `time_range`: `6h` | `12h` | `24h` | `7d` | `30d` | `3m` | `all` (on the post's own publish date)
+- optional: `keyword=...`, `min_engagement=N`, `subreddit=name` (reddit), `page=N`,
+  `per_page=N` (max 100)
+
+**Growth (`growth_24h`).** Every post can carry `growth_24h`: how much it moved between our two
+most distant readings, `{from, to, delta, percent, hours, measured_at, samples}`. Three rules:
+- `null` means **we cannot say** (only one reading, or a network with no snapshots: Facebook,
+  Pinterest, Tumblr). It does **not** mean zero. Never render it as 0%.
+- `hours` is the **real** window between the two readings. It is often less than 24. Quote it
+  ("+340% in 9h"), never assume 24.
+- `percent` is `null` when the post started from zero (division by zero); `delta` still holds the
+  absolute change and is the number to report then.
+A large `delta` over few `hours` is what "going viral right now" looks like; prefer it over raw
+totals when the user asks what is *rising*.
+
+**RSS signals.** `source=rss` returns news articles from ~230 feeds **plus articles discovered
+through social links** (feed name `Discovered on social`, source domain in `author`). Each carries
+Facebook (`facebook_shares/reactions/comments`), Reddit (`reddit_score/comments/submissions`),
+Pinterest, Bluesky (`bluesky_likes/reposts/replies/accounts`, `bluesky_top_url`), Hacker News
+(`hn_points/comments/url`), comments on the article (`comments_count/url`), how many other outlets
+ran the same story (`coverage_count`), and how many posts in our own corpus link it per network
+(`*_mentions`, `x_engagement`, `x_top_url`). `total_engagement` and `trend_score` rank them.
 
 ```bash
 curl -H "Authorization: Bearer $VH" \
