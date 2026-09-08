@@ -80,7 +80,62 @@ curl -H "Authorization: Bearer $VH" \
 Returns ranked posts with engagement metrics, author, URL and thumbnail. Use this to tell
 the user what's gaining velocity, or to pick something to curate and repost.
 
-## 3. See where you can publish
+## 3. When and where to post (best time, hashtags, sounds, communities)
+
+Four endpoints answer the questions that come right after "what is trending". Every one of them
+returns the **sample size** and the **time window** its numbers rest on. Quote them: "over 12,400
+posts of the last year" is an answer, a bare hour is a guess.
+
+**Best time to post.** `GET best-time.php?network=tiktok&timezone=America/Mexico_City[&keyword=fitness]`
+- `network`: `tiktok` | `instagram` | `x` | `facebook` | `pinterest` | `bluesky` | `mastodon` |
+  `douyin` | `tumblr` | `reddit`. `timezone` is an IANA name (default UTC).
+- Returns `best_slots[]` (weekday + hour, ranked by average engagement, each with `posts`,
+  `avg_engagement` and `hit_rate_pct` = share of that slot's posts that reached the network's top
+  10%), `worst_slot`, `today.best_hours`, `by_hour`, `by_weekday`, `proof_posts` (the most viral
+  posts published in the best slot, with links), and `sample {posts, window: "365d", from, to}`.
+- Read `confidence` first: `high` (500+ posts), `medium` (200+), `low`. Do not name an hour on `low`.
+- It measures when the posts that went viral were **published**, not when the audience is awake.
+  Say so when it matters. Weekday aggregates stay in UTC; hours are rotated to the zone.
+- With `keyword=`, the slots are recomputed on posts whose caption contains it. If that sample is
+  under 200 posts you get `fallback: true`, `keyword_sample: N` and the network-wide slots.
+
+**Top hashtags.** `GET hashtags.php[?network=instagram][&q=fitness][&sort=engagement|posts|per_post]`
+- Per network or across all (omit `network`). Rows: `hashtag`, `posts`, `total_engagement`,
+  `per_post`. `per_post` is the one to compare: a tag used less but hitting harder.
+- `GET hashtags.php?hashtag=fyp` breaks one tag down by network with its top posts.
+- `window.type` is `all_time` with `updated_at`. There is no per-day hashtag history; if the user
+  asks for "this week", say the totals are over the whole corpus.
+
+**Trending sounds.** `GET sounds.php[?network=tiktok|instagram|douyin|all][&q=espresso][&cross_only=1]`
+- Ranked by the engagement of the posts that used the sound, cross-network sounds first. A sound
+  is listed only when several different accounts used it (one account's audio is a voiceover).
+- Rows carry `networks{tiktok|instagram|douyin: posts, creators, eng, per_post}`, `cross`, and
+  `stronger` (`tiktok` | `instagram` | `even`) when both sides are measured.
+- `GET sounds.php?slug=<slug>` returns one sound with the posts that used it (links included).
+
+**Best communities.** `GET communities.php?network=reddit[&q=running][&sort=upside|members|peak|posts][&max_members=200000]`
+- Reddit rows are ranked by `peak_per_1k`: the best score we hold per 1,000 members, i.e. upside
+  relative to size. No average score is published (a swept community's sample is its greatest
+  hits). Gates: 25 posts held, 5,000 members, one post over 100 points, adult excluded.
+- `GET communities.php?network=reddit&subreddit=running` adds `timing` (best UTC hours and day
+  the climbing posts were posted, with sample), `pace`, `flairs`, `type_mix`, `top_posts` and
+  `similar` communities. Use `max_members` to find smaller rooms that are easier to climb.
+- `GET communities.php?network=bluesky[&q=science]` lists Bluesky **custom feeds** (a feed
+  surfaces your post to its readers without a follow) with `posts`, `authors`, `avg_likes`;
+  `&feed=<slug>` adds top posts, authors and hashtags.
+
+```bash
+curl -H "Authorization: Bearer $VH" \
+  "https://viralhunt.io/tool/api/v1/best-time.php?network=instagram&timezone=Europe/Madrid"
+curl -H "Authorization: Bearer $VH" \
+  "https://viralhunt.io/tool/api/v1/communities.php?network=reddit&q=running&max_members=300000"
+```
+
+A good answer to "when should I post this on Instagram?" combines them: the best slot in the
+user's zone with its hit rate and sample, two or three hashtags with high `per_post`, and, for a
+Reel, a sound that is `cross` or `stronger: instagram`.
+
+## 4. See where you can publish
 
 `GET schedule.php?action=targets`
 
@@ -96,7 +151,7 @@ post to in each:
 If a project has **0 accounts**, the user is on a plan without connected accounts —
 publishing won't work until they connect accounts in the app (Agency plans).
 
-## 4. Publish now or schedule
+## 5. Publish now or schedule
 
 `POST schedule.php?action=create` with a JSON body:
 
@@ -129,14 +184,14 @@ Returns `{ id, status, scheduled_at, targets, results, warnings }`. `status` is
 - Verify the content before publishing: don't repost fake news, copyrighted media, or spam
   — that gets the user's accounts banned. When unsure, show the user and ask.
 
-## 5. Upload media (optional)
+## 6. Upload media (optional)
 
 If you have a local file instead of a URL:
 
 `POST schedule.php?action=upload` — multipart form field `file` (jpg/png/gif/webp/mp4/mov,
 ≤50MB). Returns `{ "url": "https://..." }`. Pass that URL in `media` on create.
 
-## 6. Edit or cancel a scheduled post
+## 7. Edit or cancel a scheduled post
 
 Posts can be edited ONLY while their status is `scheduled` (not yet publishing), and PostProxy
 won't allow an edit less than ~5 minutes before publish time.
@@ -153,12 +208,12 @@ Agent rules:
   user — never retry an update blindly.
 - After any edit, `GET` again and confirm the change landed before reporting done.
 
-## 7. Check status
+## 8. Check status
 
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
 
-## 8. Content templates (make the image, don't just write the caption)
+## 9. Content templates (make the image, don't just write the caption)
 
 ViralHunt ships **layout templates** — HTML + CSS + a variable manifest — so the graphics you
 produce are on-brand and pixel-exact. ViralHunt does **not** render them: you do.
@@ -213,9 +268,30 @@ Humans do the same from **Templates** in the app.
 
 ## Editorial board (optional)
 
-You can also organize work on the user's kanban board instead of publishing directly:
-`GET columns.php`, `GET my-cards.php` (cards assigned to you), `POST cards.php` (create a
-card), `GET/POST comments.php`. See the full docs at **https://viralhunt.io/api**.
+You can also organize work on the user's kanban board instead of publishing directly. The
+board is how a team curates before anything goes out.
+
+- `GET context.php` — organization, members (people and agents, with the ids you assign to),
+  columns (with `is_default` / `is_done`) and categories, in one call. Start here.
+- `POST cards.php` — create a card. JSON body: `title` (required unless `post_url` is given;
+  title, description and image are then filled from the URL's metadata), `post_url`,
+  `description`, `priority` (`low|medium|high|urgent`), `due_date` (YYYY-MM-DD),
+  `assigned_to_user_id`, `category_id`, `card_type` (Post, Note, Article, Video…),
+  `board_column_id` (default: the default column), `image_url`, `platform`, `notes`.
+  Assigning a card notifies the person (push + email).
+- `POST cards.php` with `{"action":"move","card_id":N,"board_column_id":M}` — move it. Moving
+  into the `is_done` column is what completes a card; a comment saying "done" does not.
+- `GET my-cards.php[?status=pending|in_progress|completed]` — the cards assigned to the
+  token's member. When the token belongs to an agent member, this is your workload.
+- `GET comments.php?card_id=N` / `POST comments.php` `{"card_id":N,"comment":"…"}` — read or
+  add comments; new comments notify the assignee and mirror to the team chat's #board channel.
+- `GET columns.php`, `GET categories.php`, `GET card-types.php`, `GET members.php`,
+  `GET pending.php` (pending cards grouped by member) — the pieces of `context.php` on their own.
+
+The agent loop on a board: read `my-cards.php` → validate the post (no fake news, ToS
+violations, copyright or spam; if in doubt comment and move it to a review column) → move to an
+in-progress column → comment progress → move to the `is_done` column. Full docs at
+**https://viralhunt.io/api**.
 
 ## Error handling
 

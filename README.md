@@ -4,13 +4,20 @@ An Agent Skill that lets any AI agent **find what's trending across social netwo
 schedule/publish posts** to your connected accounts — powered by the [ViralHunt.io](https://viralhunt.io) API.
 
 ViralHunt is a trending-content radar + cross-network scheduler: it tracks what's gaining
-velocity on TikTok, Instagram, X, Facebook, Pinterest and Reddit, you curate it, and
-publish everywhere from one place. A **BuzzSumo alternative** at a fraction of the price,
-with an API that agents can drive end to end.
+velocity on TikTok, Instagram, X, Facebook, Pinterest, Bluesky, Douyin, Reddit, Mastodon,
+Tumblr, Hacker News and news RSS, you curate it, and publish everywhere from one place. A
+**BuzzSumo alternative** at a fraction of the price, with an API that agents can drive end to end.
 
 ## What the skill can do
 
-- **Discover** trending/viral posts by network, niche and time window (`trending.php`)
+- **Discover** trending/viral posts by network, niche and time window, each with its growth
+  between our two most distant readings (`trending.php`)
+- **Best time to post** per network, from the posts that went viral there over the last year,
+  with hit rate, sample size and your time zone (`best-time.php`)
+- **Top hashtags** per network or topic, by engagement, posts or per-post (`hashtags.php`)
+- **Trending sounds** on TikTok, Instagram Reels and Douyin, cross-network first (`sounds.php`)
+- **Best communities** for a topic: subreddits ranked by peak per 1,000 members with timing and
+  top posts, and Bluesky custom feeds (`communities.php`)
 - **List** the projects/brands and connected accounts you can post to (`schedule.php?action=targets`)
 - **Publish now or schedule** a post (text + media) across accounts (`schedule.php?action=create`)
 - **Upload** an image/video and get a public URL (`schedule.php?action=upload`)
