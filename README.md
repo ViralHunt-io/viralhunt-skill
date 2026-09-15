@@ -26,7 +26,7 @@ Tumblr, Hacker News and news RSS, you curate it, and publish everywhere from one
 
 ## Get a token
 
-1. Sign up at **https://viralhunt.io** (free 7-day trial, no card).
+1. Sign up at **https://viralhunt.io/claude** (the Free plan is free forever, no card; 24 content queries a day).
 2. Go to **Account → API Access** and create a personal token (`vhk_…`).
 3. Give the token to your agent. It's sent as `Authorization: Bearer vhk_…`.
 

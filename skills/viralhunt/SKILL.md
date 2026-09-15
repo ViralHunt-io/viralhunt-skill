@@ -20,12 +20,33 @@ ViralHunt (https://viralhunt.io) is a trending-content radar + cross-network sch
 This skill lets you (an agent) run the full loop for the user: **find what's going viral →
 curate it → schedule/publish it** to their connected social accounts.
 
+## 0. First call: who is this key
+
+`GET account.php` → plan, what is left today, credits, and per-endpoint rules. Call it once at
+the start of a session and again when you get a 429 or 402. Use it to set expectations before
+you promise anything:
+
+```json
+{"plan": {"key": "free", "requests_per_hour": 60, "can_publish": false},
+ "daily_queries": {"limit": 24, "used_today": 3, "remaining": 21, "resets_at": "2026-09-15T00:00:00+00:00"},
+ "credits": {"balance": 50, "note": "Credits pay for rendering work. Queries do not spend credits."},
+ "free_plan_notes": ["Trending content is served with a 72 hour delay on the free plan and engagement numbers are withheld.", "Publishing and scheduling need a connected account, which paid plans include."]}
+```
+
+On the **Free plan**: 24 content queries a day shared across trending, best-time, hashtags,
+sounds, communities and url-meta (headers `X-Daily-Limit`, `X-Daily-Remaining`, `X-Daily-Reset`);
+trending posts are at least 72 hours old and their numbers come back `null` with
+`metrics_hidden: true` (say "numbers are on paid plans", never print 0); no publishing. Spend the
+24 well: one well-filtered call beats five broad ones, and tell the user how many are left when
+it matters. Paid plans (Creator, Studio, Agency) have no daily cap, live data, numbers, and
+publishing.
+
 ## 1. Get an API token (once)
 
 Every call needs a personal token. The user creates one at
-**https://viralhunt.io → Account → API Access** (owner/admin), then gives it to you. It
-looks like `vhk_...`. If the user doesn't have one yet, send them there — a free 7-day
-trial gives them a working key.
+**https://viralhunt.io → Account → API Access** (`/tool/api-tokens.php`, owner or admin), then
+gives it to you. It looks like `vhk_...`. If the user has no account, send them to
+**https://viralhunt.io/claude**: the Free plan is free forever, no card, and comes with a key.
 
 Send it on every request:
 
@@ -34,7 +55,7 @@ Authorization: Bearer vhk_the_users_token
 ```
 
 Base URL: `https://viralhunt.io/tool/api/v1/`
-Rate limit: 100 requests/hour per token (headers `X-RateLimit-Remaining` / `-Reset`; a 429
+Rate limit: per plan, per token (Free 60 an hour, paid plans more; headers `X-RateLimit-Remaining` / `-Reset`; a 429
 means wait until the reset). All responses are JSON: `{"success":true,"data":{…}}` or
 `{"success":false,"error":{"code","message"}}`.
 
@@ -237,6 +258,8 @@ produce are on-brand and pixel-exact. ViralHunt does **not** render them: you do
 Filters: `category`, `media_type=image|video`, `network`, `q`, and
 `assigned=1&project_id=N` (only the templates that project is allowed to use).
 
+**In claude.ai, show before you render.** Fill the template and present the html+css as an HTML artifact first, so the user sees the finished card in the conversation and can ask for changes; render to PNG (steps 5 and 6) only when they want to publish it.
+
 **The render loop:**
 
 1. `GET templates.php?assigned=1&project_id=N` → pick a template for what you're posting.
@@ -314,6 +337,8 @@ in-progress column → comment progress → move to the `is_done` column. Full d
 | 422 | `project_required` | org has multiple projects — pass `project`/`project_id` |
 | 422 | `validation_error` | fix the parameter named in the message |
 | 429 | `rate_limited` | wait until `X-RateLimit-Reset`, then retry |
+| 429 | `daily_limit_reached` | Free plan: today's 24 queries are used; tell the user the reset time from `details.reset` and offer the paid plans |
+| 402 | `insufficient_credits` | the account has no credits for a render; say how many it needs (`details.required`) |
 | 503 | `scheduler_unavailable` / `publishing_unavailable` | scheduling not enabled on this site |
 
 Always surface the `error.message` to the user verbatim — it explains exactly what to fix.
