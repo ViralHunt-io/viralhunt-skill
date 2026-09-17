@@ -246,6 +246,28 @@ Agent rules:
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
 
+## 8b. Quotes (a daily quote, picked by popularity and category)
+
+`GET quotes.php?category=stoicism&lang=en&unused=1&per_page=5` returns quotes ranked by our
+popularity score, each with `text`, `author`, `author_context` (`description`, `born`, `died`),
+`work`, `categories`, `rights` and `popularity` (high/medium/low). Mix categories with
+`categories=stoicism,leadership`. `sort=random` draws among the best 200 that match.
+`GET quotes.php?categories_list=1` lists the categories we hold. `max_chars` defaults to 180,
+which is what the quote templates fit.
+
+- **Default is `rights=public_domain`** (authors dead more than 70 years). Keep it unless the
+  user asks for a modern author; with `rights=any` each quote says `restricted` and you tell
+  the user before scheduling it under their brand.
+- **The caption's context comes from the response, not from memory.** Write one or two sentences
+  on who the author was and, when `work` is present, where the line comes from, using
+  `author_context` and `work`. If you add a fact that is not in the response, say it is general
+  knowledge and keep it verifiable; never invent the occasion a quote was said on. Respect the
+  character limit the user gives for the context.
+- **A daily series:** pick with `unused=1`, fill the quote template (section 9), schedule it, then
+  `POST quotes.php {"action":"mark_used","quote_id":N,"note":"scheduled 2026-09-20 instagram"}`
+  so the next day's pick is a different quote. For a month at once, fetch `per_page=30`, schedule
+  one per day at the network's best time (section 3), and mark each as used.
+
 ## 9. Content templates (make the image, don't just write the caption)
 
 ViralHunt ships **layout templates** — HTML + CSS + a variable manifest — so the graphics you
