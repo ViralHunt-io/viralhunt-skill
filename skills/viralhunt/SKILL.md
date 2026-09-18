@@ -323,6 +323,44 @@ To change which templates a project may use (owner/admin only):
 `POST template-assignments.php` — `{"project_id": 1, "template_id": 7, "action": "add"|"remove"}`.
 Humans do the same from **Templates** in the app.
 
+## 10. Studio: recipes, the quote templates and author portraits
+
+A **recipe** is a standing order a person saved in the app (Recipes): what to post, from which
+source, with which template, in which format, on which networks and how often. Read them before
+asking what to do for a brand:
+
+`GET recipes.php?project_id=N` → each recipe carries `source` (`quotes`, `trending`, `manual`),
+`source_params`, and `source_call` (the exact request that gets the content, paste it), the
+`template` (`slug` to fetch with `templates.php?slug=`), `format`, `networks`, `cadence`
+(`daily`, `weekdays`, `weekly`, `manual`), `post_time` in the project's timezone (null = the
+network's best time, section 3), `caption_brief` (how the caption should read) and `last_run_at`.
+
+**The loop for one recipe run:**
+
+1. `source_call` → the content (for quotes: `unused=1` is already in it, so it is a fresh one).
+2. `GET templates.php?slug=<template.slug>` → fill it (section 9). The studio quote templates
+   take `quote`, `author`, `author_context`, `portrait` or `background`, `format`, `caption`.
+3. Render at the recipe's `format`, upload, schedule on each of `networks` at `post_time` or the
+   best time, with a caption written from `caption_brief`.
+4. For quotes, `POST quotes.php {"action":"mark_used","quote_id":N}`.
+5. `POST recipes.php {"action":"ran","recipe_id":N}` so the person sees it happened.
+
+A `cadence` of `daily` with `last_run_at` older than today means it is due. Never run a paused
+recipe (`is_active: false`). If the brand has no recipe, ask; do not invent a standing order.
+
+**Studio quote templates** (`studio-quote-portrait`, `studio-quote-photo`, `studio-quote-type`)
+are brand-neutral; the person restyles them in the app (colours, fonts, position) and the copy
+they save is what you fetch, so never change their css. `studio-quote-portrait` takes the
+author's portrait; `studio-quote-photo` uses it full-bleed and only when it is large;
+`studio-quote-type` needs no picture.
+
+**Author portraits.** Each quote may carry `author_image` (`url`, `width`, `height`, `license`,
+`credit`, `source_page`): the portrait Wikidata names for that person, served from our domain at
+1200 px. Use `url` as the template's `portrait`; when `author_image` is null pass an empty string
+and the layout closes the gap. For `background` use it only when `width` is 1000 or more. When
+`license` is not public domain, end the caption with a credit line ("Photo: {credit}, {license}").
+Never substitute a picture of someone else or a generated likeness of a real person.
+
 ## Editorial board (optional)
 
 You can also organize work on the user's kanban board instead of publishing directly. The
