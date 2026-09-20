@@ -280,6 +280,12 @@ produce are on-brand and pixel-exact. ViralHunt does **not** render them: you do
 Filters: `category`, `media_type=image|video`, `network`, `q`, and
 `assigned=1&project_id=N` (only the templates that project is allowed to use).
 
+**A template can carry the owner's own instructions.** When `GET templates.php` (or `?slug=`) returns
+`instructions` on a template, that text was written by the person who made it in the app ("use for
+breaking AI news, hook under eight words, in Spanish, never for competitor news"). Follow it before
+any general rule in this file, and when two templates could fit a post, prefer the one whose
+`instructions` name the case. A template with no `instructions` is used as its `description` says.
+
 **In claude.ai, show before you render.** Fill the template and present the html+css as an HTML artifact first, so the user sees the finished card in the conversation and can ask for changes; render to PNG (steps 5 and 6) only when they want to publish it.
 
 **The render loop:**
