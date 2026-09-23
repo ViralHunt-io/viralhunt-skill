@@ -88,7 +88,7 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{â€
   `most_upvoted` (reddit), `most_boosted` (mastodon), `most_noted` (tumblr), `most_points`
   (hackernews); for `rss`: `trending`, `engagement`, `growth`, `bluesky`, `mentions`, `coverage`,
   `hn`, `comments`
-- `time_range`: `6h` | `12h` | `24h` | `7d` | `30d` | `3m` | `all` (on the post's own publish date).
+- `time_range`: any number with a unit (`24h`, `7d`, `30d`, `2w`, `3m`, `1y`), a bare number of days (`30`), or `all`, on the post's own publish date. Default `24h`. An unknown value is a 422, never a silent fallback.
   Tumblr's corpus fills slowly, so `7d` can be empty there: use `30d` or `all` for `tumblr`.
 - optional: `keyword=...`, `min_engagement=N`, `subreddit=name` (reddit), `page=N`,
   `per_page=N` (max 100)
@@ -130,6 +130,18 @@ curl -H "Authorization: Bearer $VH" \
 
 Returns ranked posts with engagement metrics, author, URL and thumbnail. Use this to tell
 the user what's gaining velocity, or to pick something to curate and repost.
+
+**Every network at once: `GET search.php?keyword=montessori+playroom`.** The research pass for a
+brand or a niche in one call: each network returns its top rows for the keyword, normalized to one
+shape (`platform, id, title, description, post_url, thumbnail_url, author_name, author_handle,
+engagement_score, stats, growth_24h, created_at`, and the network's full row under `raw`), merged
+and ranked. `sources[]` says per network how many posts matched (`total`), so you can tell the user
+where the topic lives and where we hold nothing. Options: `sources=all|pinterest,x,reddit`,
+`time_range` (default `30d`; any number with a unit, a bare number of days, or `all`; anything else
+is a 422), `per_source` 1..50 (default 10), `sort=engagement|recent`, `min_engagement`. All words
+must appear, in any order. Use `/trending` when the user wants ONE network with its own sort options
+and paging. A `total: 0` on a network means the corpus has nothing on it in that window: say so
+plainly, do not invent posts, and know that every search is logged and steers what we extract next.
 
 ## 3. When and where to post (best time, hashtags, sounds, communities)
 
