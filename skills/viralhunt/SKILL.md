@@ -310,8 +310,11 @@ produce are on-brand and pixel-exact. ViralHunt does **not** render them: you do
 `GET templates.php?slug=vh-image-card` → **that one template's full spec**, including `html`,
 `css`, `variables`, `formats`, `palette`, `fonts` and `render_tech`.
 
-Filters: `category`, `media_type=image|video`, `network`, `q`, and
-`assigned=1&project_id=N` (only the templates that project is allowed to use).
+Filters: `category`, `media_type=image|video`, `network`, `q`,
+`assigned=1&project_id=N` (only the templates that project is allowed to use) and
+`favorites=1` (only what the brand starred in its gallery). Every row carries `favorite:
+true|false` and favourites come first in the list: when several templates could fit a post,
+prefer a favourite.
 
 **A template can carry the owner's own instructions.** When `GET templates.php` (or `?slug=`) returns
 `instructions` on a template, that text was written by the person who made it in the app ("use for
