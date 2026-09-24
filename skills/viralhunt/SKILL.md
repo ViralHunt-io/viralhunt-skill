@@ -414,7 +414,9 @@ board is how a team curates before anything goes out.
   title, description and image are then filled from the URL's metadata), `post_url`,
   `description`, `priority` (`low|medium|high|urgent`), `due_date` (YYYY-MM-DD),
   `assigned_to_user_id`, `category_id`, `card_type` (Post, Note, Article, Video…),
-  `board_column_id` (default: the default column), `image_url`, `platform`, `notes`.
+  `board_column_id` (default: the default column), `image_url`, `platform`, `notes`,
+  `tags` (an array or a comma string of free words; new ones are created for the organization;
+  they follow the card into the scheduled post, so published statistics filter by them).
   Assigning a card notifies the person (push + email).
 - `POST cards.php` with `{"action":"move","card_id":N,"board_column_id":M}` — move it. Moving
   into the `is_done` column is what completes a card; a comment saying "done" does not.
