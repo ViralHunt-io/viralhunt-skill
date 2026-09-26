@@ -258,6 +258,14 @@ brand's voice, add what it left out (context, the source, the number, the DOI), 
 headline of your own on the image. A draft whose text matches the source word for word is a
 mistake the person will have to fix.
 
+**Never reuse another page's picture when it carries THEIR branding.** Most viral pages stamp
+their logo, frame or watermark on every image; that picture must not go into our template's
+`image` slot either, because the post would carry the competitor's brand inside ours. Use, in
+this order: a picture the organization uploaded (its own library), a licensed picture of the same
+subject you fetch yourself (Wikimedia Commons, Unsplash, Pexels, with the credit in the caption
+when the licence asks for it), or the source photo ONLY when it is plainly unbranded (a bare
+photo with no logo, text or frame). Say in the review note where the picture came from.
+
 **Draft by default.** Unless the user explicitly asked you to publish or schedule right now, send
 `"draft": true`: the post lands complete in the app's Drafts (copy, media, targets, time) where
 a person checks it, edits it and approves it. An organization can also set review mode to "all",
