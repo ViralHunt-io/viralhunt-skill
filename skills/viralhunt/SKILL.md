@@ -92,6 +92,9 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{�
   Tumblr's corpus fills slowly, so `7d` can be empty there: use `30d` or `all` for `tumblr`.
 - optional: `keyword=...`, `min_engagement=N`, `subreddit=name` (reddit), `page=N`,
   `per_page=N` (max 100)
+- `author=<name>` narrows to ONE page or account: a Facebook page name, an X handle or name, a
+  TikTok or Instagram username (contains-match). "The most viral posts of the page Comunidad
+  Biológica in 2025" is `source=facebook&author=Comunidad Biológica&time_range=1y&sort=viral`.
 
 **Growth (`growth_24h`).** Every post can carry `growth_24h`: how much it moved between our two
 most distant readings, `{from, to, delta, percent, hours, measured_at, samples}`. Five rules:
@@ -233,9 +236,18 @@ time, and get a yes before sending it (see Safety rules).
   "target_account_ids": [12, 15],     // omit = ALL accounts in the project
   "networks": ["instagram","facebook"],// alternative to target_account_ids
   "scheduled_at": "2026-08-01T15:30:00Z", // ISO-8601 UTC; omit = publish immediately
-  "first_comment": "Link in comments 👇"  // optional; posted as the first comment
+  "first_comment": "Link in comments 👇",  // optional; posted as the first comment
+  "draft": true,                          // save it in Drafts instead of sending (see 5b)
+  "overrides": {"instagram": {"body": "…"}}, // per-network copy or media (keyed by network or account_id)
+  "card_id": 123                          // the board card it comes from (optional)
 }
 ```
+
+**Draft by default.** Unless the user explicitly asked you to publish or schedule right now, send
+`"draft": true`: the post lands complete in the app's Drafts (copy, media, targets, time) where
+a person checks it, edits it and approves it. An organization can also set review mode to "all",
+in which case every post becomes a draft whatever you send (the answer says `status: "draft"`).
+Tell the user where it went (`review_url`).
 
 ```bash
 curl -X POST -H "Authorization: Bearer $VH" -H "Content-Type: application/json" \
@@ -253,6 +265,45 @@ Returns `{ id, status, scheduled_at, targets, results, warnings }`. `status` is
 - Only pass `scheduled_at` in the future, in UTC.
 - Verify the content before publishing: don't repost fake news, copyrighted media, or spam
   — that gets the user's accounts banned. When unsure, show the user and ask.
+
+## 5b. Drafts and review (the limbo before sending)
+
+A draft is a complete post that is not sent. People and agents put posts there; people (or an
+owner/admin token) approve them; agents review them.
+
+- `GET schedule.php?action=drafts` (add `&all=1` for every project) → `drafts[]`, each with
+  `body`, `media`, `targets`, `scheduled_at`, `overrides`, `card_id`, `submitted_via` and
+  `review {score, verdict, entries[]}`.
+- `POST schedule.php?action=update` with `{id, body?, media?, overrides?, scheduled_at?,
+  target_account_ids?|networks?, first_comment?}` edits a draft in place (no confirmation
+  needed: nothing is sent).
+- `POST schedule.php?action=review` with `{id, verdict: "ok"|"fix"|"block", score: 0-100,
+  scores: {tos_risk, fake_news, sensationalism, grammar}, warnings: [{code, network, text,
+  severity}], note}` appends your review. The person sees it on the draft.
+- `POST schedule.php?action=approve` with `{id}` sends it (owner/admin token only, and never
+  without the user's yes). A draft whose last verdict is `block` cannot be approved until it is
+  fixed and reviewed again.
+- `POST schedule.php?action=cancel` with `{id}` drops a draft.
+
+**Reviewing as the team's checker.** When the user asks you to check the drafts (or on a loop
+they set up): list them, and for each one read the copy and the media, then judge: the terms of
+each target network (violence, health claims, politics, minors, copyright, spam patterns), fake
+news and unverified claims (cross-check with `trending.php?source=rss&keyword=` and the other
+networks: who else carries it), sensationalism, grammar. Post ONE review per draft with a verdict
+(`block` only for something that must not go out as it is), a score, one warning per issue with
+the network it concerns, and a short note on how to fix it. Never edit someone else's draft
+unless asked; never approve.
+
+**A standing job, end to end.** "Take the 30 most viral posts of the page Comunidad Biológica
+from 2025, verify, rewrite them better, add the DOI, use a nice template with the same or similar
+pictures under our brand, and leave them scheduled 5 a day": `trending.php?source=facebook&author=
+Comunidad Biológica&time_range=1y&sort=viral&per_page=30` → for each post: verify the claim
+(section 2, RSS and Reddit by keyword; the DOI from the paper the post cites, never invented),
+rewrite the copy (section 9, the `caption` variable is the post body), fill a template with the
+post's picture as `image` (section 9), render the PNG (section 9, step 5), then
+`schedule.php?action=create` with `draft: true`, the PNG in `media`, the copy in `body`, and
+`scheduled_at` spread 5 a day at the project's best hours (section 3). Report the 30 draft ids
+and the review URL. The person approves from the app.
 
 ## 6. Upload media (optional)
 
