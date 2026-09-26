@@ -297,16 +297,32 @@ networks: who else carries it), sensationalism, grammar. Post ONE review per dra
 the network it concerns, and a short note on how to fix it. Never edit someone else's draft
 unless asked; never approve.
 
-**A standing job, end to end.** "Take the 30 most viral posts of the page Comunidad Biológica
-from 2025, verify, rewrite them better, add the DOI, use a nice template with the same or similar
-pictures under our brand, and leave them scheduled 5 a day": `trending.php?source=facebook&author=
-Comunidad Biológica&time_range=1y&sort=viral&per_page=30` → for each post: verify the claim
-(section 2, RSS and Reddit by keyword; the DOI from the paper the post cites, never invented),
-rewrite the copy (section 9, the `caption` variable is the post body), fill a template with the
-post's picture as `image` (section 9), render the PNG (section 9, step 5), then
-`schedule.php?action=create` with `draft: true`, the PNG in `media`, the copy in `body`, and
-`scheduled_at` spread 5 a day at the project's best hours (section 3). Report the 30 draft ids
-and the review URL. The person approves from the app.
+**A standing job, one post at a time.** "Take the most viral posts of the page Comunidad
+Biológica from 2025, go one by one, verify, rework the good ones, make the image with our
+templates and leave everything in drafts so I evaluate them":
+
+1. `trending.php?source=facebook&author=Comunidad Biológica&time_range=1y&sort=viral&per_page=30`
+   (page through if more are wanted). Keep the list; work it in order.
+2. For EACH post, in its own turn: read it; verify the claim (section 2: `source=rss&keyword=`
+   and `source=reddit&keyword=` show who else carries it; a DOI comes from the paper the post
+   cites, found by title, never invented). If it does not hold up, skip it and say why in one
+   line; do not draft what you could not verify.
+3. Rework what holds up: a stronger hook, the story in the `caption` (section 9), the source
+   named, the DOI when there is one. Keep the language of the page.
+4. Pick the template by the post (`suits`, favourites first, the template's `instructions`).
+   Fill only its `dynamic` variables, with the post's own picture as `image`. Render the PNG
+   (section 9, step 5). When no template fits, keep the original picture and say so.
+5. `schedule.php?action=create` with `draft: true`, the PNG in `media`, the copy in `body`, the
+   post's URL in the note, and `scheduled_at` spread over the days at the project's best hours
+   (section 3), five a day unless told otherwise.
+6. Report after every post (id of the draft or why it was skipped), and at the end the review
+   URL. The person evaluates in the app; never approve.
+
+**Learn from the edits.** `GET schedule.php?action=edit_log&since=<ISO>` returns every change a
+person made to drafts after you left them: field, before, after, who. Read it at the start of
+each batch (and when the user says "you keep doing X wrong"): shorter captions, a different
+picture, another hour, an account removed. Apply the pattern to the next drafts and tell the
+user what you changed because of it.
 
 ## 6. Upload media (optional)
 
@@ -363,6 +379,22 @@ which is what the quote templates fit.
 
 ViralHunt ships **layout templates** — HTML + CSS + a variable manifest — so the graphics you
 produce are on-brand and pixel-exact. ViralHunt does **not** render them: you do.
+
+**Static versus dynamic.** Every template answer carries three fields that say what is yours to
+touch: `dynamic` (the variables: the picture that changes with every post, the texts drawn on
+the card, the `caption` that is the post body, the `format`), `static` (what the owner fixed:
+the logo and its place, the signature, the frame, the text boxes and images they placed, the
+colours and fonts) and `suits` (the kinds of post the template is for: `news`, `article`,
+`photo`, `quote`, `number`, `tip`, `on_this_day`, `meme`, `any`). Fill only what is dynamic;
+everything static is already baked into the html and css, so never move it, cover it with a box
+or restyle it. When two templates fit, prefer a favourite, then the one whose `instructions`
+name the case, then the one whose `suits` matches the post.
+
+**Which template for which post.** A photo post with a headline → `suits` has `news` or `photo`
+(the news frame, the viral image card). A quote or a one-line saying → `quote`. A figure from the
+radar → `number`. Advice → `tip`. A date → `on_this_day`. A post that fits none (a long video, a
+carousel of many pictures, a screenshot with its own text) → do not force a template: leave the
+draft with the original picture in `media` and say so in the draft's note, so the person decides.
 
 `GET templates.php` → the library (lean: no html/css, so it doesn't flood your context).
 `GET templates.php?slug=vh-image-card` → **that one template's full spec**, including `html`,
