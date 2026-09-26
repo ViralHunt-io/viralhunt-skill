@@ -239,9 +239,24 @@ time, and get a yes before sending it (see Safety rules).
   "first_comment": "Link in comments 👇",  // optional; posted as the first comment
   "draft": true,                          // save it in Drafts instead of sending (see 5b)
   "overrides": {"instagram": {"body": "…"}}, // per-network copy or media (keyed by network or account_id)
-  "card_id": 123                          // the board card it comes from (optional)
+  "card_id": 123,                         // the board card it comes from (optional)
+  "design": {"template": "studio-news-frame-2", "format": "feed",   // the picture as a filled template (see 5b)
+             "variables": {"text": "…", "highlight": "…", "image": "https://…", "caption": "…"}}
 }
 ```
+
+**The picture comes from the organization's templates, always.** Never attach another page's
+picture as the post's picture. Either render a template yourself (section 9) and pass the PNG in
+`media`, or pass `design` (the template's slug, the format and the dynamic variables) with
+`draft: true`: the app renders it on the Drafts page and exports the PNG when a person approves.
+The original post's photo goes in the template's `image` variable, where the template frames it
+under the brand. Only when no template suits the post, and you say so in the review note, may
+the draft go without a design.
+
+**Never copy another page's text.** The source post is material, not copy: rewrite it in the
+brand's voice, add what it left out (context, the source, the number, the DOI), and put a
+headline of your own on the image. A draft whose text matches the source word for word is a
+mistake the person will have to fix.
 
 **Draft by default.** Unless the user explicitly asked you to publish or schedule right now, send
 `"draft": true`: the post lands complete in the app's Drafts (copy, media, targets, time) where
@@ -309,12 +324,16 @@ templates and leave everything in drafts so I evaluate them":
    line; do not draft what you could not verify.
 3. Rework what holds up: a stronger hook, the story in the `caption` (section 9), the source
    named, the DOI when there is one. Keep the language of the page.
-4. Pick the template by the post (`suits`, favourites first, the template's `instructions`).
-   Fill only its `dynamic` variables, with the post's own picture as `image`. Render the PNG
-   (section 9, step 5). When no template fits, keep the original picture and say so.
-5. `schedule.php?action=create` with `draft: true`, the PNG in `media`, the copy in `body`, the
-   post's URL in the note, and `scheduled_at` spread over the days at the project's best hours
-   (section 3), five a day unless told otherwise.
+4. Pick the template by the post (`suits`, favourites first, the organization's own copies
+   before the library, the template's `instructions`). Fill only its `dynamic` variables, with
+   the post's own picture as `image` and a headline of your own as `text`. Render the PNG
+   (section 9, step 5) or, when you cannot render, pass `design` and let the app render it.
+   When no template fits, say so in the review note; never ship the other page's picture as
+   the post's picture.
+5. `schedule.php?action=create` with `draft: true`, the PNG in `media` (or the `design`), the
+   copy in `body`, and `scheduled_at` spread over the days at the project's best hours
+   (section 3), five a day unless told otherwise. Then `action=review` on it with the source
+   URL and what you verified in `note`, so the person sees where it came from.
 6. Report after every post (id of the draft or why it was skipped), and at the end the review
    URL. The person evaluates in the app; never approve.
 
