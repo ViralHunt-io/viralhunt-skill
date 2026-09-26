@@ -279,7 +279,10 @@ owner/admin token) approve them; agents review them.
   needed: nothing is sent).
 - `POST schedule.php?action=review` with `{id, verdict: "ok"|"fix"|"block", score: 0-100,
   scores: {tos_risk, fake_news, sensationalism, grammar}, warnings: [{code, network, text,
-  severity}], note}` appends your review. The person sees it on the draft.
+  severity}], note}` appends your review. The person sees it on the draft. If the organization
+  turned on "send a draft by itself when a review says OK", a verdict of `ok` SENDS the draft at
+  its tentative time and the answer carries `sent` (status, results, warnings): say so to the
+  user, and give `ok` only when you would approve it yourself.
 - `POST schedule.php?action=approve` with `{id}` sends it (owner/admin token only, and never
   without the user's yes). A draft whose last verdict is `block` cannot be approved until it is
   fixed and reviewed again.
