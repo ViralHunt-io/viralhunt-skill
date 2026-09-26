@@ -208,11 +208,15 @@ post to in each:
 ```json
 { "project": {"id":1,"name":"My Brand","timezone":"America/Mexico_City"},
   "projects": [ {"id":1,"name":"My Brand","networks":["instagram","facebook"],"account_count":4} ],
-  "accounts": [ {"account_id":12,"network":"instagram","name":"@mybrand"} ] }
+  "accounts": [ {"account_id":12,"network":"instagram","name":"@mybrand"} ],
+  "needs_reconnect": [ {"account_id":105,"network":"bluesky","name":"Digital Brain"} ] }
 ```
 
 If a project has **0 accounts**, the user is on a plan without connected accounts —
 publishing won't work until they connect accounts in the app (Agency plans).
+`needs_reconnect` lists connections that expired: they are not targets and a post will not go
+there until the user reconnects them at **Schedule → Accounts** in the app. When it is not empty,
+tell the user which network needs reconnecting before you publish.
 
 ## 5. Publish now or schedule
 
