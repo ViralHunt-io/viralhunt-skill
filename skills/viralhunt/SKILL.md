@@ -345,6 +345,27 @@ templates and leave everything in drafts so I evaluate them":
 6. Report after every post (id of the draft or why it was skipped), and at the end the review
    URL. The person evaluates in the app; never approve.
 
+**The same post in another language.** Some brands run a project per language (Cerebro Digital
+in Spanish, Cerebro Digital EN in English) and link them in Projects: `targets` lists each
+project's `lang` and `translates_to` (the linked project, its language, whether it is
+preselected and whether the translation waits as a draft or goes out with the original).
+- `POST schedule.php?action=translate` with `{id, project_id, account_ids?, image?}` makes the
+  translated draft of a post (a draft or one already sent) in the linked project: the copy, the
+  first comment, the per-network copies, the thread and the TEXT variables of a design are
+  adapted by the app (hashtags in the new language; links, mentions, numbers and names kept).
+  You do not translate yourself: send the original, the app does it, so both languages come
+  from one place.
+- A design keeps its picture and the template re-renders in the new language: the answer
+  carries `needs_png: true` and `render {html, css, format}`. Render it (section 9, step 5),
+  `update {id, png}` with the data URL, then `approve` when the user wants it out. When you
+  cannot render, leave it: the person approves it on the Drafts page and the app renders it.
+- A post with a plain picture (no template) keeps it: text baked into a PNG cannot be
+  translated. If the user hands you the translated picture, upload it (section 6) and pass its
+  URL as `image`; otherwise say the picture stayed in the original language.
+- When you approve a draft, `translations: [{project_id, account_ids?, image?}]` on
+  `action=approve` does the same in one call. Ask the user first when the link is not
+  preselected (`auto: false`), and never create the same translation twice (the app refuses).
+
 **Learn from the edits.** `GET schedule.php?action=edit_log&since=<ISO>` returns every change a
 person made to drafts after you left them: field, before, after, who. Read it at the start of
 each batch (and when the user says "you keep doing X wrong"): shorter captions, a different
