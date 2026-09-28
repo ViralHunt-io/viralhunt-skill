@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="skills/viralhunt/SKILL.md"><img alt="skill version" src="https://img.shields.io/badge/skill-1.4.0-1edbee?style=flat-square"></a>
+  <a href="skills/viralhunt/SKILL.md"><img alt="skill version" src="https://img.shields.io/badge/skill-1.4.1-1edbee?style=flat-square"></a>
   <a href="https://viralhunt.io/api"><img alt="API v1" src="https://img.shields.io/badge/API-v1-5468ff?style=flat-square"></a>
   <a href="https://www.npmjs.com/package/viralhunt-mcp"><img alt="MCP server" src="https://img.shields.io/badge/MCP-viralhunt--mcp-8c5cff?style=flat-square"></a>
   <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-2ea44f?style=flat-square"></a>
@@ -309,7 +309,7 @@ The skill is written so a stranger's agent behaves well on a real brand's accoun
 
 The skill follows the API. When an endpoint changes, `SKILL.md` changes in the same commit and the version
 moves in its frontmatter, in `.claude-plugin/plugin.json` and in [CHANGELOG.md](CHANGELOG.md). Current
-version **1.4.0** (2026-09-28). The source of truth is the ViralHunt application repository; this repository
+version **1.4.1** (2026-09-28). The source of truth is the ViralHunt application repository; this repository
 is its public mirror, refreshed on every release.
 
 Siblings: the [MCP server](https://github.com/viralhunt-io/viralhunt-mcp) (`viralhunt-mcp` on npm, listed

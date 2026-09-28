@@ -15,16 +15,44 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.4.0"
+  version: "1.4.1"
   updated: "2026-09-28"
   api_docs: https://viralhunt.io/api
 ---
 
 # ViralHunt
 
-ViralHunt (https://viralhunt.io) is a trending-content radar + cross-network scheduler.
-This skill lets you (an agent) run the full loop for the user: **find what's going viral →
-curate it → schedule/publish it** to their connected social accounts.
+ViralHunt (https://viralhunt.io) is a **trending-content radar and a cross-network publisher**
+built for teams and for the agents that work with them. It measures what is gaining velocity on
+twelve networks and in the news, tells you when and where to post it, holds the brand's image
+templates, keeps a review queue (drafts) where people and agents check each other's work, and
+publishes to eleven networks from one place. This skill lets you (an agent) run the whole job for
+the user: **find what is going viral → verify it → make the image on the brand's templates → leave
+it as a draft or publish it → translate it → learn from what the person changed.**
+
+**Networks it tracks:** TikTok, Instagram, X, Facebook, Pinterest, Bluesky, Douyin, Reddit,
+Mastodon, Tumblr, Hacker News and news RSS (230 feeds plus articles found through social links).
+**Networks it publishes to:** Instagram, Facebook pages, TikTok, X, LinkedIn (profiles and pages),
+YouTube, Pinterest, Threads, Bluesky, Telegram and Google Business.
+
+**What you can do with it** (each line is a section below):
+
+| You want to… | Section |
+|---|---|
+| Know the plan, the daily quota and the credits behind the key | 0 |
+| Find what is viral by network, niche, page or account, with measured growth; search one keyword on every network | 2 |
+| Know the best time to post, the hashtags that hit hardest, the trending sounds, the best subreddits and Bluesky feeds | 3 |
+| See the brands (projects), their connected accounts and each network's media ceilings | 4 |
+| Publish now, schedule, or leave a complete post as a draft, with per-network copy, a thread, a first comment, or a filled template | 5 |
+| Review drafts as the team's checker, approve with the user's yes, run the standing job on a page's viral posts, translate into a linked project, learn from the edit log | 5b |
+| Upload a file, edit or cancel a post, read statuses that carry each network's own reason, see what performed | 6 to 8a |
+| Pick quotes for a daily series, public domain by default, with author context and portraits | 8b |
+| Fill and render the brand's image templates: what is static, what is dynamic, what each suits | 9 |
+| Execute the recipes a person saved in the app | 10 |
+| Hand work to teammates on the editorial board | Editorial board |
+
+Everything below is the operating manual. Read the safety rules first; they are what makes a brand
+trust an agent with its accounts.
 
 ## Safety rules (read first)
 

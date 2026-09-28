@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.4.1 (2026-09-28)
+
+- The skill opens with what ViralHunt is, the twelve networks it tracks, the eleven it publishes to,
+  and a table of what an agent can do with it, section by section. Directories that render the
+  skill file (ClawHub) show the whole offer at the top; agents get the same map before the manual.
+
 ## 1.4.0 (2026-09-28)
 
 - **Drafts and review** (section 5b): `draft: true` on create, `GET ?action=drafts`, `update` on a
