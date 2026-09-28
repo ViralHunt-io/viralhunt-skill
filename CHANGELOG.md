@@ -29,7 +29,7 @@ the skill is updated in the same commit as the endpoint it describes.
   15 min, TikTok 4 GB and 10 min.
 - **Status that tells the truth** (section 8): `partial` and `failed` carry each network's own
   reason; the app retries a transient failure up to three times; the owner is alerted once.
-- **What performed** (section 8c): `stats.php`.
+- **What performed** (section 8a): `stats.php`.
 - **`author=`** on trending for Facebook, X, TikTok and Instagram; `needs_reconnect` on targets.
 - Error table: `forbidden`, `not_approvable`, `not_editable`, `upload_too_large`, `no_project`,
   `publish_failed`, `drafts_unavailable`, `translations_unavailable`, `edit_log_unavailable`.

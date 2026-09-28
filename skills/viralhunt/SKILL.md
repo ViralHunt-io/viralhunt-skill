@@ -448,7 +448,7 @@ What the words mean, so you report them right:
 The owner is emailed and pushed once when a post of the last day settles as failed or partial, so
 do not repeat the alert; add what you can do about it.
 
-## 8c. What performed (stats)
+## 8a. What performed (stats)
 
 `GET stats.php[?project=NAME|project_id=N][&network=tiktok][&days=30][&limit=20]` → the published
 posts' engagement as the networks report it back: `by_network`, `by_project` and `top_posts` (with
