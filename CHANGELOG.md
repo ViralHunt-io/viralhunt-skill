@@ -3,6 +3,11 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## Unreleased
+
+- The language of a post is the project's (`lang` on `targets`) or the one the user asked for, never
+  the source page's by default; the template-instructions example no longer names a language.
+
 ## 1.4.1 (2026-09-28)
 
 - The skill opens with what ViralHunt is, the twelve networks it tracks, the eleven it publishes to,
