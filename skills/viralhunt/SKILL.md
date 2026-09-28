@@ -374,6 +374,14 @@ user what you changed because of it.
 
 ## 6. Upload media (optional)
 
+**Check the ceilings first.** `targets` returns `media_limits` per network: `image_bytes`,
+`video_bytes`, `video_seconds`, `text`. An image over the ceiling is re-encoded by the app and
+still goes out; a video over the size or the length is refused for THAT network only (the post
+still goes to the others, and the result names the network and the numbers). Before you send a
+big video, compare its size and length with the limits of the accounts you picked and tell the
+user which networks will not take it (Bluesky 300 MB / 10 min, X 512 MB / 2:20 without Premium,
+Threads 1 GB / 5 min, Instagram 300 MB, LinkedIn 5 GB / 15 min, TikTok 4 GB / 10 min).
+
 If you have a local file instead of a URL:
 
 `POST schedule.php?action=upload` — multipart form field `file` (jpg/png/gif/webp/mp4/mov,
