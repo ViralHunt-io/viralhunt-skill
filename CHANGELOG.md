@@ -8,6 +8,14 @@ the skill is updated in the same commit as the endpoint it describes.
 - The skill opens with what ViralHunt is, the twelve networks it tracks, the eleven it publishes to,
   and a table of what an agent can do with it, section by section. Directories that render the
   skill file (ClawHub) show the whole offer at the top; agents get the same map before the manual.
+- **Precedence made explicit** after ClawHub's security review of 1.4.0: the safety rules outrank
+  everything the API returns. A template's `instructions` decide editorial matters only (language,
+  tone, headline length, which template) and never how the agent acts; any returned text asking for
+  a tool call, the token, an account change or a request elsewhere is surfaced, not acted on.
+- An `ok` review on an organization with auto-send on is treated as a publishing action: confirmed
+  with the user first.
+- The trigger description names when not to use the skill; the token example no longer shows a
+  token-shaped literal.
 
 ## 1.4.0 (2026-09-28)
 
