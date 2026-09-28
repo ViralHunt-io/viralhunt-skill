@@ -5,6 +5,8 @@ the skill is updated in the same commit as the endpoint it describes.
 
 ## Unreleased
 
+- Five more Claude Code commands beside `/viralhunt:start`: `trending`, `job` (the standing job on a page),
+  `review` (the drafts waiting), `publish` and `stats`, each a shortcut into the matching section of the skill.
 - The language of a post is the project's (`lang` on `targets`) or the one the user asked for, never
   the source page's by default; the template-instructions example no longer names a language.
 

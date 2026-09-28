@@ -54,7 +54,7 @@ Cline, a custom LLM loop) how to use that API well and safely. The same API is a
 /plugin marketplace add viralhunt-io/viralhunt-skill
 /plugin install viralhunt@viralhunt
 ```
-Then `/viralhunt:start` introduces ViralHunt and proposes your first step. From a shell:
+Then `/viralhunt:start` introduces ViralHunt and proposes your first step; `/viralhunt:trending`, `/viralhunt:job`, `/viralhunt:review`, `/viralhunt:publish` and `/viralhunt:stats` jump straight into each workflow. From a shell:
 `claude plugin marketplace add viralhunt-io/viralhunt-skill` and `claude plugin install viralhunt@viralhunt`.
 
 **skills.sh**
