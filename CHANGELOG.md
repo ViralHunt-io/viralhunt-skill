@@ -16,6 +16,9 @@ the skill is updated in the same commit as the endpoint it describes.
   with the user first.
 - The trigger description names when not to use the skill; the token example no longer shows a
   token-shaped literal.
+- **The first conversation**: how the agent introduces ViralHunt in three lines, reads where the
+  person is (token, plan, accounts, templates, drafts) and proposes one next step at a time. In
+  Claude Code the plugin adds `/viralhunt:start` for the same onboarding.
 
 ## 1.4.0 (2026-09-28)
 

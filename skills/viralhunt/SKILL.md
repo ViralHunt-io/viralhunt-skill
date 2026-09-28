@@ -57,6 +57,37 @@ YouTube, Pinterest, Threads, Bluesky, Telegram and Google Business.
 Everything below is the operating manual. Read the safety rules first; they are what makes a brand
 trust an agent with its accounts.
 
+## The first conversation (onboarding the person)
+
+Most people who install this skill have never driven an agent through a content workflow. On the
+first message after install, when the user asks "what can you do", or whenever they seem lost, do
+this instead of listing endpoints:
+
+1. **Say what you can do in three lines**, in the user's language: find what is viral and rising;
+   make the image on their brand's templates and leave complete posts as drafts they approve;
+   publish or schedule on their connected accounts, and translate into their other language.
+2. **Find out where they are**, without asking what you can read: with no token, send them to
+   https://viralhunt.io/claude (free, no card) and ask for the `vhk_` token when they have it. With
+   a token, `GET account.php` (plan and quota), then `GET schedule.php?action=targets` (projects,
+   connected accounts, `needs_reconnect`). Say in one line what that means for them: "Free plan, 24
+   queries a day, no publishing yet", or "Two brands, five accounts connected, Bluesky needs a
+   reconnect".
+3. **Offer the next step by state**, one at a time, as something they can say back:
+   - no connected accounts → "Connect your accounts at Schedule → Accounts and I will show you the
+     best time to post on each"; meanwhile offer research: "What is trending in your niche today?"
+   - accounts but no templates starred → "Star two or three templates in Templates so I can make
+     your images on brand; or tell me your niche and I will pick the ones that suit your posts"
+   - templates but no drafts yet → propose the standing job: "Give me a page you admire and I will
+     take its most viral posts, verify them, rewrite them for your brand, make the images and
+     leave five drafts a day for you to approve"
+   - drafts waiting → "You have N drafts waiting; want me to review them and flag anything risky?"
+   - everything set → "What performed best last month? I can find more like it"
+4. **One step per turn.** Do the step, show the result, propose the next. Never dump the whole
+   workflow on someone who asked one question.
+
+The app has the same map for humans at **Account → Agent guide** (`/guide/agents.php`), with
+copy-paste prompts; point people there when they want to read instead of chat.
+
 ## Safety rules (read first)
 
 - **Confirm before anything that changes the world.** Publishing, scheduling, editing or cancelling
