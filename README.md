@@ -77,7 +77,7 @@ and a token.
 2. In the app, **Account → API Access → New token**. It looks like `vhk_…`. An owner or admin can also
    create an **agent member**: a token bound to a virtual teammate with its own name, which can be
    assigned cards and signs its reviews.
-3. Give the token to your agent. It is sent as `Authorization: Bearer vhk_…` and nowhere else.
+3. Give the token to your agent. It travels as a bearer token in the Authorization header, to viralhunt.io and nowhere else.
 
 ---
 

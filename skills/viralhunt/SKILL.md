@@ -207,7 +207,7 @@ ran the same story (`coverage_count`), and how many posts in our own corpus link
 (`*_mentions`, `x_engagement`, `x_top_url`). `total_engagement` and `trend_score` rank them.
 
 ```bash
-curl -H "Authorization: Bearer $VH" \
+curl -H "Authorization: Bearer <token>" \
   "https://viralhunt.io/tool/api/v1/trending.php?source=tiktok&sort=viral&time_range=7d&per_page=10"
 ```
 
@@ -271,9 +271,9 @@ posts of the last year" is an answer, a bare hour is a guess.
   `&feed=<slug>` adds top posts, authors and hashtags.
 
 ```bash
-curl -H "Authorization: Bearer $VH" \
+curl -H "Authorization: Bearer <token>" \
   "https://viralhunt.io/tool/api/v1/best-time.php?network=instagram&timezone=Europe/Madrid"
-curl -H "Authorization: Bearer $VH" \
+curl -H "Authorization: Bearer <token>" \
   "https://viralhunt.io/tool/api/v1/communities.php?network=reddit&q=running&max_members=300000"
 ```
 
@@ -353,7 +353,7 @@ in which case every post becomes a draft whatever you send (the answer says `sta
 Tell the user where it went (`review_url`).
 
 ```bash
-curl -X POST -H "Authorization: Bearer $VH" -H "Content-Type: application/json" \
+curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
   -d '{"project":"My Brand","body":"Hello world","networks":["instagram"]}' \
   "https://viralhunt.io/tool/api/v1/schedule.php?action=create"
 ```
