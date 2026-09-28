@@ -4,14 +4,20 @@ description: >-
   Discover what's trending/going viral across TikTok, Instagram, X, Facebook,
   Pinterest, Bluesky, Douyin, Reddit, Mastodon, Tumblr, Hacker News and news RSS,
   learn the best time to post on each network from measured viral posts, find the
-  top hashtags, trending sounds and best communities, and schedule or publish posts
-  to the user's own connected social accounts — powered by the ViralHunt.io API.
-  Use this whenever the user wants to find viral or trending content in a niche,
-  research what's performing on social right now, ask when or where to post, or
-  draft/schedule/publish social posts across networks.
+  top hashtags, trending sounds and best communities, make on-brand images from the
+  organization's templates, leave complete posts as drafts for a person to review (or
+  review them yourself), translate a post into a linked project's language, and schedule
+  or publish posts to the user's own connected social accounts — powered by the
+  ViralHunt.io API. Use this whenever the user wants to find viral or trending content
+  in a niche, research what's performing on social right now, ask when or where to
+  post, run a standing content job for a brand, check drafts, or draft/schedule/publish
+  social posts across networks.
 license: MIT
 metadata:
   author: viralhunt-io
+  version: "1.4.0"
+  updated: "2026-09-28"
+  api_docs: https://viralhunt.io/api
 ---
 
 # ViralHunt
@@ -280,7 +286,14 @@ curl -X POST -H "Authorization: Bearer $VH" -H "Content-Type: application/json" 
 
 Returns `{ id, status, scheduled_at, targets, results, warnings }`. `status` is
 `processing` (publishing now), `scheduled` (queued), `partial` (some targets failed — see
-`warnings`), or `failed`. It fans out one post per target account.
+`warnings`), or `failed`. It fans out one post per target account. `results` is keyed by
+account id: `{status, post_id, permalink?, error?}`. A network that refuses at once (a video
+over its ceiling, a dead connection) appears there as `failed` with the reason, and the post still
+goes to the others: read `warnings` and tell the user which network did not get it.
+
+**Media ceilings.** Images over a network's limit are re-encoded by the app and still go out;
+videos are not: one over the size or the length is refused for that network with the numbers
+(section 6, `media_limits`). Check before you send a big video.
 
 **Rules to follow so you don't create bad posts:**
 - If the org has more than one project, you **must** pass `project` or `project_id` — the
@@ -295,11 +308,18 @@ A draft is a complete post that is not sent. People and agents put posts there; 
 owner/admin token) approve them; agents review them.
 
 - `GET schedule.php?action=drafts` (add `&all=1` for every project) → `drafts[]`, each with
-  `body`, `media`, `targets`, `scheduled_at`, `overrides`, `card_id`, `submitted_via` and
-  `review {score, verdict, entries[]}`.
+  `body`, `media`, `targets`, `scheduled_at`, `overrides`, `card_id`, `submitted_via`, `design`
+  (when the picture is a filled template), `lang`, `translated_from_id` and
+  `review {score, verdict, reviewed_at, entries[]}`.
+- `GET schedule.php?action=get&id=N` on a draft with a `design` also returns `render {html, css,
+  format}`: the final card, static layers and fixed slots already baked in, variables substituted.
+  Render it (section 9, step 5) and store the PNG with `update {id, png: "data:image/png;base64,…"}`;
+  it becomes the post's first picture. When you cannot render, leave it: the Drafts page renders
+  it when a person approves.
 - `POST schedule.php?action=update` with `{id, body?, media?, overrides?, scheduled_at?,
-  target_account_ids?|networks?, first_comment?}` edits a draft in place (no confirmation
-  needed: nothing is sent).
+  target_account_ids?|networks?, first_comment?, design?, png?}` edits a draft in place (no
+  confirmation needed: nothing is sent). Every field a person changes afterwards is logged
+  (`edit_log`, below), so keep your edits deliberate.
 - `POST schedule.php?action=review` with `{id, verdict: "ok"|"fix"|"block", score: 0-100,
   scores: {tos_risk, fake_news, sensationalism, grammar}, warnings: [{code, network, text,
   severity}], note}` appends your review. The person sees it on the draft. If the organization
@@ -385,7 +405,9 @@ Threads 1 GB / 5 min, Instagram 300 MB, LinkedIn 5 GB / 15 min, TikTok 4 GB / 10
 If you have a local file instead of a URL:
 
 `POST schedule.php?action=upload` — multipart form field `file` (jpg/png/gif/webp/mp4/mov,
-≤50MB). Returns `{ "url": "https://..." }`. Pass that URL in `media` on create.
+up to 50 MB through the API). Returns `{ "url": "https://..." }`. Pass that URL in `media` on
+create. A bigger video (the app itself takes up to 512 MB in chunks) must already live at a public
+https URL: pass that URL in `media` and the publishing service fetches it.
 
 ## 7. Edit or cancel a scheduled post
 
@@ -408,6 +430,31 @@ Agent rules:
 
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
+
+What the words mean, so you report them right:
+- `scheduled`: queued for its time. `processing`: handed to the networks, waiting for their
+  answer (a video takes minutes; a target being retried also keeps the post here).
+- `published`: every target is live; each `results[account]` carries `permalink`.
+- `partial`: some targets are live, at least one refused. `failed`: none went out. In both,
+  `error_message` sums it up and each failed `results[account].error` carries the network's own
+  words ("Profile is inactive, please reconnect it", "blob too big (maximum 2000000)").
+- The app retries a failure that looks temporary (the publishing service could not process a
+  video, a 5xx, a timeout) up to three times, 10 to 30 minutes apart, while the post is under 36
+  hours old; `results[account]` then shows `retries`, `will_retry` and `retry_after`. A final
+  reason (a dead connection, a refused text, an oversized video) is never retried: tell the user
+  what to fix (reconnect the account, shorten the copy, a smaller video) and offer to schedule it
+  again for that network only.
+- `draft`: waiting for a review and an approval (section 5b). `canceled`: dropped.
+The owner is emailed and pushed once when a post of the last day settles as failed or partial, so
+do not repeat the alert; add what you can do about it.
+
+## 8c. What performed (stats)
+
+`GET stats.php[?project=NAME|project_id=N][&network=tiktok][&days=30][&limit=20]` → the published
+posts' engagement as the networks report it back: `by_network`, `by_project` and `top_posts` (with
+permalinks). `ready: false` means no stats have been collected yet for this organization. Use it to
+answer "what worked" and to look for more content like the winners (`search.php` with the winning
+topic); never to invent a number the networks did not give.
 
 ## 8b. Quotes (a daily quote, picked by popularity and category)
 
@@ -587,6 +634,13 @@ in-progress column → comment progress → move to the `is_done` column. Full d
 | 429 | `rate_limited` | wait until `X-RateLimit-Reset`, then retry |
 | 429 | `daily_limit_reached` | Free plan: today's 24 queries are used; tell the user the reset time from `details.reset` and offer the paid plans |
 | 402 | `insufficient_credits` | the account has no credits for a render; say how many it needs (`details.required`) |
+| 403 | `forbidden` | approving a draft needs an owner or admin token; say so, do not retry |
+| 409 | `not_approvable` | the draft is blocked by its last review, or is not a draft any more; re-read it |
+| 409 | `not_editable` / `already_published` | the post is publishing or published; re-fetch and tell the user |
+| 413 | `upload_too_large` | over 50 MB through the API: host the file at a public URL and pass it in `media` |
+| 422 | `no_project` | the `project_id` or `project` you passed is not in this organization |
+| 502 | `publish_failed` | every target refused; the message lists each network's reason |
 | 503 | `scheduler_unavailable` / `publishing_unavailable` | scheduling not enabled on this site |
+| 503 | `drafts_unavailable` / `translations_unavailable` / `edit_log_unavailable` | that feature is not enabled on this server yet |
 
 Always surface the `error.message` to the user verbatim — it explains exactly what to fix.
