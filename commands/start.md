@@ -1,5 +1,5 @@
 ---
-description: Introduce ViralHunt in three lines, check where the user is (token, plan, connected accounts, templates, drafts) and propose the one next step
+description: "Introduce ViralHunt in three lines, check where the user is (token, plan, connected accounts, templates, drafts) and propose the one next step"
 ---
 
 Run the ViralHunt onboarding from the `viralhunt` skill, section "The first conversation":

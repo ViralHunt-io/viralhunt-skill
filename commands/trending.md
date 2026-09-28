@@ -1,6 +1,6 @@
 ---
-description: What is viral right now on one network or all of them, for a niche, a keyword or one page; with measured growth and the sample behind it
-argument-hint: [network or "all"] [niche, keyword or "page: Name"]
+description: "What is viral right now on one network or all of them, for a niche, a keyword or one page; with measured growth and the sample behind it"
+argument-hint: "[network or 'all'] [niche, keyword or 'page: Name']"
 ---
 
 Use the `viralhunt` skill, section 2 (Find trending content). The user asked: $ARGUMENTS

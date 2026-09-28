@@ -1,6 +1,6 @@
 ---
-description: What performed: the networks' own engagement of the posts published through ViralHunt, by network and by brand, and more content like the winners
-argument-hint: [project] [days, default 30]
+description: "What performed: the networks' own engagement of the posts published through ViralHunt, by network and by brand, and more content like the winners"
+argument-hint: "[project] [days, default 30]"
 ---
 
 Use the `viralhunt` skill, section 8a. The user asked: $ARGUMENTS

@@ -1,6 +1,6 @@
 ---
-description: Publish now or schedule a post on the user's connected accounts (or leave it as a draft), with per-network copy and the media checked against each network's ceilings
-argument-hint: <what to post> [networks] [when] ["draft"]
+description: "Publish now or schedule a post on the user's connected accounts (or leave it as a draft), with per-network copy and the media checked against each network's ceilings"
+argument-hint: "<what to post> [networks] [when] ['draft']"
 ---
 
 Use the `viralhunt` skill, sections 4, 5 and 6. The user asked: $ARGUMENTS

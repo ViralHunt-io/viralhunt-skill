@@ -1,6 +1,6 @@
 ---
-description: Review the drafts waiting in ViralHunt as the team's checker: terms of each network, unverified claims, sensationalism, grammar; one review per draft, never an approval
-argument-hint: [project name or "all"]
+description: "Review the drafts waiting in ViralHunt as the team's checker: terms of each network, unverified claims, sensationalism, grammar; one review per draft, never an approval"
+argument-hint: "[project name or 'all']"
 ---
 
 Use the `viralhunt` skill, section 5b ("Reviewing as the team's checker"). Scope: $ARGUMENTS

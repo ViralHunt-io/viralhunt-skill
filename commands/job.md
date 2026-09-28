@@ -1,6 +1,6 @@
 ---
-description: The standing job on one page or account: take its most viral posts, verify each, rewrite for the brand, make the image on a template, leave drafts a few a day
-argument-hint: <network> <page or account name> [period, e.g. 1y] [drafts per day]
+description: "The standing job on one page or account: take its most viral posts, verify each, rewrite for the brand, make the image on a template, leave drafts a few a day"
+argument-hint: "<network> <page or account name> [period, e.g. 1y] [drafts per day]"
 ---
 
 Run the standing job from the `viralhunt` skill, section 5b ("A standing job, one post at a time"). The user asked: $ARGUMENTS
