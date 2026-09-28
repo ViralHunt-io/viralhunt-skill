@@ -317,6 +317,23 @@ is its public mirror, refreshed on every release.
 Siblings: the [MCP server](https://github.com/viralhunt-io/viralhunt-mcp) (`viralhunt-mcp` on npm, listed
 on the Official MCP Registry) exposes the same API as 32 tools.
 
+## Links
+
+- Website: https://viralhunt.io
+- Documentation (API reference): https://viralhunt.io/api
+- Support: support@viralhunt.io
+- Privacy policy: https://viralhunt.io/privacy
+- Terms of service: https://viralhunt.io/terms
+- Source: https://github.com/viralhunt-io/viralhunt-skill
+
+## What this plugin runs, sends and fetches
+
+It contains one skill (instructions) and one command; no hooks, no local servers, no scripts. Following
+the skill, the agent sends HTTPS requests to `https://viralhunt.io/tool/api/v1/` with the user's own
+ViralHunt token in the Authorization header, and to nowhere else. It reads trends, templates, drafts
+and account data from that API, and writes posts, drafts, reviews and cards there, always inside the
+user's own ViralHunt organization. Nothing runs on the user's machine beyond the agent's own HTTP calls.
+
 ## License
 
 MIT. ViralHunt is a product of [viralhunt.io](https://viralhunt.io).
