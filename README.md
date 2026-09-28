@@ -49,11 +49,13 @@ Cline, a custom LLM loop) how to use that API well and safely. The same API is a
 
 ## Install
 
-**Claude Code**
+**Claude Code** (the repository is its own marketplace, `viralhunt`)
 ```
 /plugin marketplace add viralhunt-io/viralhunt-skill
-/plugin install viralhunt
+/plugin install viralhunt@viralhunt
 ```
+Then `/viralhunt:start` introduces ViralHunt and proposes your first step. From a shell:
+`claude plugin marketplace add viralhunt-io/viralhunt-skill` and `claude plugin install viralhunt@viralhunt`.
 
 **skills.sh**
 ```

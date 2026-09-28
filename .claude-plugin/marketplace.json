@@ -1,0 +1,18 @@
+{
+  "name": "viralhunt",
+  "description": "ViralHunt for AI agents: find what is going viral on 12 networks, make the image on the brand's templates, leave drafts for a human to approve, translate, and publish or schedule on 11 networks.",
+  "owner": {
+    "name": "ViralHunt",
+    "url": "https://viralhunt.io"
+  },
+  "plugins": [
+    {
+      "name": "viralhunt",
+      "source": "./",
+      "description": "Trending content on 12 networks, best time and hashtags, the brand's image templates, drafts and review, translation, publishing on 11 networks, through the ViralHunt.io API. Includes /viralhunt:start onboarding.",
+      "version": "1.4.1",
+      "homepage": "https://viralhunt.io",
+      "keywords": ["social-media", "trending", "scheduler", "drafts", "templates", "agents", "mcp"]
+    }
+  ]
+}
