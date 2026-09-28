@@ -13,7 +13,46 @@ BuzzSumo alternative at a fraction of the price, with an API built for agents.
 The whole skill is one file: [`skills/viralhunt/SKILL.md`](skills/viralhunt/SKILL.md). Current
 version **1.4.0** (2026-09-28). What changed in each version: [CHANGELOG.md](CHANGELOG.md).
 
-## What the skill teaches an agent
+## What the skill can do
+
+Things a person can ask their agent for, and get done end to end:
+
+- **"Take the 30 most viral posts of the page Comunidad Biológica from 2025, verify each one,
+  rewrite the good ones, make the image on our template and leave them in drafts, five a day."**
+  The agent pulls one page's most viral posts (`author=` on trending), checks each claim against
+  the other networks and the press, rewrites the copy in the brand's voice, fills the brand's own
+  template (headline, highlight, caption; the picture only if it is unbranded, else a licensed one),
+  leaves each as a draft at the network's best hour with a review note that names the source, and
+  reads the person's edits afterwards to do the next batch better.
+- **"Leave this as a draft for me to check."** Any post, text and picture or a filled template,
+  lands complete in the app's Drafts with the accounts and a tentative time. Nothing is sent until
+  a person approves it on the Drafts page (or a review says OK, when the organization allows that).
+- **"Check the drafts waiting and flag anything risky."** The agent as the team's checker: for each
+  draft, the terms of each target network, unverified claims, sensationalism, grammar; one review
+  per draft with a verdict, a score and one warning per issue, never an approval on its own.
+- **"Also publish it in English."** A project linked to its other-language project: the agent asks
+  for the translation and the app adapts the copy and the template's texts; the template re-renders
+  in the new language; a plain picture is swapped only if the person hands the translated one.
+- **"Schedule a daily stoic quote on Instagram for a month, at the best time."** Quotes ranked by
+  popularity, public domain by default, with the author's context and portrait; one per day, each
+  marked used so tomorrow's is different.
+- **"Run the brand's recipes that are due today."** The standing orders a person saved in the app
+  (source, template, format, networks, cadence), executed by the agent and stamped as run.
+- **"What is trending in my niche right now, and where is it rising fastest?"** By network or across
+  all of them, with the measured growth between two readings and the sample it rests on.
+- **"When should I post this Reel, with which hashtags and which sound?"** Best slot in the user's
+  time zone with its hit rate, hashtags that hit hardest per post, sounds trending across networks.
+- **"Which subreddits or Bluesky feeds would take this topic?"** Communities ranked by upside
+  relative to size, with their timing and top posts.
+- **"Publish this now on Instagram and Facebook."** With a per-network copy where the length
+  differs (Bluesky 300 characters, X 280), a first comment, a thread on X and Threads, and the
+  media checked against each network's ceiling before it leaves.
+- **"What did we publish that worked, and find me more like it."** The networks' own engagement
+  numbers for the published posts, by network and brand, and a search for the winning topic.
+- **"Hand this to Ana on the board."** A kanban card with the post's metadata, an assignee, a
+  priority and a due date, commented and moved as the work advances.
+
+## How it does it (by endpoint)
 
 **Research**
 - Trending and viral posts by network, niche, account or page and time window, each with its
