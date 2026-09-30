@@ -1,10 +1,11 @@
 {
   "name": "viralhunt",
   "displayName": "ViralHunt",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "repository": "https://github.com/viralhunt-io/viralhunt-skill",
   "license": "MIT",
   "privacyPolicyUrl": "https://viralhunt.io/privacy",
+  "icon": ".claude-plugin/icon.png",
   "description": "Discover trending/viral content across TikTok, Instagram, X, Facebook, Pinterest, Bluesky, Douyin, Reddit, Mastodon, Tumblr, Hacker News and news RSS; learn the best time to post, top hashtags, trending sounds and the best communities for a topic; make on-brand images from the organization's templates; leave complete posts as drafts for review or review them; translate a post into a linked project's language; and schedule or publish posts to your connected social accounts via the ViralHunt.io API.",
   "author": {
     "name": "ViralHunt",

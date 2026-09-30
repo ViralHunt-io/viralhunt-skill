@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.4.1"
+  version: "1.4.2"
   updated: "2026-09-28"
   api_docs: https://viralhunt.io/api
 ---

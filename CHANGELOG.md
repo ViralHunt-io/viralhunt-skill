@@ -3,8 +3,9 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
-## Unreleased
+## 1.4.2 (2026-09-30)
 
+- An icon for the directories (`.claude-plugin/icon.png`): the Claude directory listing showed the publisher's avatar instead.
 - Five more Claude Code commands beside `/viralhunt:start`: `trending`, `job` (the standing job on a page),
   `review` (the drafts waiting), `publish` and `stats`, each a shortcut into the matching section of the skill.
 - The language of a post is the project's (`lang` on `targets`) or the one the user asked for, never
