@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.4.3 (2026-10-01)
+
+- A member or agent token always drafts: `schedule.php?action=create` from a token whose member is not an owner or
+  admin lands in Drafts whatever `draft` says, and `targets` announces it in `must_draft` (`""`, `"role"`,
+  `"review_mode"`). Only an owner or admin sends directly, as only they approve. Section 5b.
+
 ## 1.4.2 (2026-09-30)
 
 - An icon for the directories (`.claude-plugin/icon.png`): the Claude directory listing showed the publisher's avatar instead.
