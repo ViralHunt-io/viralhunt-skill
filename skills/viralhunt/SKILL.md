@@ -349,10 +349,13 @@ photo with no logo, text or frame). Say in the review note where the picture cam
 **Draft by default.** Unless the user explicitly asked you to publish or schedule right now, send
 `"draft": true`: the post lands complete in the app's Drafts (copy, media, targets, time) where
 a person checks it, edits it and approves it. Two things make a draft of every post whatever you send
-(the answer says `status: "draft"`): the organization's review mode set to "all", and a token whose
-member is not an owner or admin, which is what an agent token usually is. `targets` tells you
-beforehand in `must_draft` (`""`, `"role"` or `"review_mode"`): read it before promising "published",
-and say "it is in Drafts for an owner to approve" instead. Tell the user where it went (`review_url`).
+(the answer says `status: "draft"`): a token whose member is not an owner or admin, which is what
+an agent token usually is (`"role"`), and the organization's review mode set to "all", which also
+holds admins' posts (`"review_mode"`); an owner token is never forced. `targets` tells you beforehand
+in `must_draft` (`""`, `"role"` or `"review_mode"`): read it before promising "published", and say
+"it is in Drafts for an owner to approve" instead. Tell the user where it went (`review_url`). An
+owner or admin token approves with `POST schedule.php {action: "approve", id, now: true}` to send
+at once, or without `now` to keep the draft's scheduled time.
 
 ```bash
 curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
