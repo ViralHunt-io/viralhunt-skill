@@ -3,6 +3,14 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.5.0 (2026-10-01)
+
+- Drafts and Review are two stages. `create` from a member or agent token lands in Review (complete and
+  dated, waiting for an owner or admin); `draft: true` keeps a working copy in Drafts. New
+  `action=submit {id, now?, scheduled_at?}` moves a draft to Review; `drafts` carries `stage` and takes
+  `&stage=`; a `fix` verdict returns the post to Drafts (`returned: true`); `approve` works on both stages
+  and takes `now: true`. `targets` says `review_stage_ready`. Section 5b rewritten.
+
 ## 1.4.3 (2026-10-01)
 
 - A member or agent token always drafts: `schedule.php?action=create` from a token whose member is not an owner or

@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.4.3"
+  version: "1.5.0"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -346,16 +346,16 @@ subject you fetch yourself (Wikimedia Commons, Unsplash, Pexels, with the credit
 when the licence asks for it), or the source photo ONLY when it is plainly unbranded (a bare
 photo with no logo, text or frame). Say in the review note where the picture came from.
 
-**Draft by default.** Unless the user explicitly asked you to publish or schedule right now, send
-`"draft": true`: the post lands complete in the app's Drafts (copy, media, targets, time) where
-a person checks it, edits it and approves it. Two things make a draft of every post whatever you send
-(the answer says `status: "draft"`): a token whose member is not an owner or admin, which is what
-an agent token usually is (`"role"`), and the organization's review mode set to "all", which also
-holds admins' posts (`"review_mode"`); an owner token is never forced. `targets` tells you beforehand
-in `must_draft` (`""`, `"role"` or `"review_mode"`): read it before promising "published", and say
-"it is in Drafts for an owner to approve" instead. Tell the user where it went (`review_url`). An
-owner or admin token approves with `POST schedule.php {action: "approve", id, now: true}` to send
-at once, or without `now` to keep the draft's scheduled time.
+**Nothing you create goes out by itself.** Two stages sit before a post is sent (section 5b):
+**Drafts** (being worked on) and **Review** (complete and dated, waiting for an owner or admin to
+authorize it). A member or agent token cannot authorize, so your `create` lands in Review
+(`status: "review"`) when the post is complete, or in Drafts when you pass `"draft": true` because
+you still mean to edit it. An owner token publishes directly; an admin token too, unless the
+organization's review mode holds admins' posts in Review. `targets` says beforehand in
+`must_draft` (`""`, `"role"` or `"review_mode"`) and `review_stage_ready`: read it before promising
+"published", and say "it is in Review for an owner to authorize" instead. Tell the user where it
+went (`review_url`). An owner or admin token authorizes with `POST schedule.php {action: "approve",
+id, now: true}` to send at once, or without `now` to keep the post's scheduled time.
 
 ```bash
 curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" \
@@ -381,13 +381,21 @@ videos are not: one over the size or the length is refused for that network with
 - Verify the content before publishing: don't repost fake news, copyrighted media, or spam
   — that gets the user's accounts banned. When unsure, show the user and ask.
 
-## 5b. Drafts and review (the limbo before sending)
+## 5b. Drafts and Review (the two stages before sending)
 
-A draft is a complete post that is not sent. People and agents put posts there; people (or an
-owner/admin token) approve them; agents review them.
+Nothing in either stage has been sent.
+- **Draft** = being worked on, by a person or by you. It may be incomplete. Edit it freely with
+  `update`; when it is complete and dated, `submit` moves it to Review.
+- **Review** = complete and dated, waiting for an owner or admin to authorize it. People and agents
+  leave verdicts here (`review`); "needs fixes" sends it back to Drafts with the note; an owner or
+  admin approves it and it goes out at its time (or at once).
+Your `create` without `draft: true` lands straight in Review (the post is complete); with
+`draft: true` it is a working copy in Drafts. When the server has not migrated the review stage yet
+(`review_stage_ready: false` on `targets`), everything is a `draft` and the person approves from there.
 
-- `GET schedule.php?action=drafts` (add `&all=1` for every project) → `drafts[]`, each with
-  `body`, `media`, `targets`, `scheduled_at`, `overrides`, `card_id`, `submitted_via`, `design`
+- `GET schedule.php?action=drafts` (add `&all=1` for every project, `&stage=draft|review` for one
+  stage) → `drafts[]`, each with `stage`, `body`, `media`, `targets`, `scheduled_at`, `overrides`,
+  `card_id`, `submitted_via`, `design`
   (when the picture is a filled template), `lang`, `translated_from_id` and
   `review {score, verdict, reviewed_at, entries[]}`.
 - `GET schedule.php?action=get&id=N` on a draft with a `design` also returns `render {html, css,
@@ -399,12 +407,16 @@ owner/admin token) approve them; agents review them.
   target_account_ids?|networks?, first_comment?, design?, png?}` edits a draft in place (no
   confirmation needed: nothing is sent). Every field a person changes afterwards is logged
   (`edit_log`, below), so keep your edits deliberate.
+- `POST schedule.php?action=submit` with `{id, now?: true, scheduled_at?: ISO UTC}` moves a draft to
+  Review once it is complete (a body or media, and at least one account). `now` clears the time
+  (it goes out when authorized), `scheduled_at` sets one, neither keeps the draft's own.
 - `POST schedule.php?action=review` with `{id, verdict: "ok"|"fix"|"block", score: 0-100,
   scores: {tos_risk, fake_news, sensationalism, grammar}, warnings: [{code, network, text,
-  severity}], note}` appends your review. The person sees it on the draft. If the organization
-  turned on "send a draft by itself when a review says OK", a verdict of `ok` SENDS the draft at
-  its tentative time and the answer carries `sent` (status, results, warnings): say so to the
-  user, and give `ok` only when you would approve it yourself.
+  severity}], note}` appends your review to a post in Review. A verdict of `fix` sends it back to
+  Drafts with your note (the answer carries `returned: true`). If the organization turned on "an
+  OK in Review publishes by itself", a verdict of `ok` SENDS the post at its time and the answer
+  carries `sent` (status, results, warnings): say so to the user, and give `ok` only when you would
+  approve it yourself.
 - `POST schedule.php?action=approve` with `{id}` sends it (owner/admin token only, and never
   without the user's yes). A draft whose last verdict is `block` cannot be approved until it is
   fixed and reviewed again.
@@ -438,10 +450,12 @@ templates and leave everything in drafts so I evaluate them":
    (section 9, step 5) or, when you cannot render, pass `design` and let the app render it.
    When no template fits, say so in the review note; never ship the other page's picture as
    the post's picture.
-5. `schedule.php?action=create` with `draft: true`, the PNG in `media` (or the `design`), the
-   copy in `body`, and `scheduled_at` spread over the days at the project's best hours
-   (section 3), five a day unless told otherwise. Then `action=review` on it with the source
-   URL and what you verified in `note`, so the person sees where it came from.
+5. `schedule.php?action=create` with the PNG in `media` (or the `design`), the copy in `body`,
+   and `scheduled_at` spread over the days at the project's best hours (section 3), five a day
+   unless told otherwise. As an agent token it lands in Review, complete and dated; pass
+   `draft: true` only when the user wants to touch it before anyone judges it. Then
+   `action=review` on it with the source URL and what you verified in `note`, so the person
+   sees where it came from.
 6. Report after every post (id of the draft or why it was skipped), and at the end the review
    URL. The person evaluates in the app; never approve.
 
