@@ -381,6 +381,11 @@ videos are not: one over the size or the length is refused for that network with
 - Verify the content before publishing: don't repost fake news, copyrighted media, or spam
   — that gets the user's accounts banned. When unsure, show the user and ask.
 
+**Media does not live forever.** The files of a published post are deleted from storage 48 hours
+after it went out (the live post on the network is the record; the queue keeps a thumbnail), and
+the files of a draft nobody finished go after 7 days. Never reuse a media URL from an old post:
+upload again (section 6) or pass a `design`.
+
 ## 5b. Drafts and Review (the two stages before sending)
 
 Nothing in either stage has been sent.
@@ -395,7 +400,8 @@ Your `create` without `draft: true` lands straight in Review (the post is comple
 
 - `GET schedule.php?action=drafts` (add `&all=1` for every project, `&stage=draft|review` for one
   stage) → `drafts[]`, each with `stage`, `body`, `media`, `targets`, `scheduled_at`, `overrides`,
-  `card_id`, `submitted_via`, `design`
+  `card_id`, `submitted_via`, `media_removed` (true = its files were deleted after a week unfinished:
+  upload the media again, or pass a `design`, before `submit`), `design`
   (when the picture is a filled template), `lang`, `translated_from_id` and
   `review {score, verdict, reviewed_at, entries[]}`.
 - `GET schedule.php?action=get&id=N` on a draft with a `design` also returns `render {html, css,
