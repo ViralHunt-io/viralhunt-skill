@@ -3,6 +3,18 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.0 (2026-10-05)
+
+- The reviewer job (section 5c): the content rule lives on the platform (`GET policy.php`: what blocks, what
+  goes back to Drafts, six scores with thresholds, per-network differences) and is read at the start of every
+  pass; `drafts&needs_review=1` is the queue (posts in Review with no verdict on their current content); one
+  `review` per post; the prompt that sets up the ten-minute job. New fields on `drafts`: `needs_review`,
+  `valid_verdict`, `content_hash`, `updated_at`. `review` answers with the stored `verdict` (the server
+  recalculates it from scores and warnings), `verdict_requested`, `verdict_reason`, `returned` and `sent`
+  as a result or `{skipped, reason}`. Server rules an OK cannot bypass: a self review never sends, only an
+  owner, admin or a member ticked "their OK publishes" releases, nothing under 15 minutes or without a time,
+  nothing edited after the review. Safety rules updated.
+
 ## 1.5.0 (2026-10-01)
 
 - Drafts and Review are two stages. `create` from a member or agent token lands in Review (complete and
