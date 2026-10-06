@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.2 (2026-10-06)
+
+- `review` takes `content_hash` (the drafts row's value when the post was read): the server writes the review only
+  if the post is still that content, else `409 content_changed` with the current hash. Section 5c says to always send
+  it. The self-review rule is spelled out as by user, not by token (the reviewer is its own agent member).
+
 ## 1.6.1 (2026-10-06)
 
 - The reviewer checks four more things on every post (section 5c): the picture against the text (`image_match`,

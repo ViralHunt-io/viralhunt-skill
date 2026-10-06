@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.1"
+  version: "1.6.2"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -502,7 +502,9 @@ user what you changed because of it.
 The organization can give one token the job of checking what waits in Review, so posts from
 collaborators and from the creating agent go out on time without a person reading each one, and
 nothing that breaks a network's rules goes out at all. The reviewer is a token of its own: the
-token that creates posts never reviews them (the server ignores a self OK anyway).
+token that creates posts never reviews them (the server ignores a self OK anyway). The rule is by USER,
+not by token: a second token of the writer's user changes nothing; the reviewer is its own member, which is
+what "Create an agent" on API Access makes.
 
 **1. Read the rule first.** `GET policy.php` → `policy {version, block[], fix[], ok, scores{},
 thresholds, networks{}, review_rules[]}`. This is the content rule of ViralHunt, kept on the
@@ -547,8 +549,10 @@ network's terms). The server reports it per collaborator; it never changes the v
 
 **5. Leave ONE review.** `POST schedule.php?action=review` with `{id, verdict, score, scores
 {tos_risk, rights, fake_news, sensationalism, brand, grammar, risk10, image_match, ai_written},
-warnings[{code, network, text, severity}], note}`. The six policy scores carry the thresholds; `risk10`,
-`image_match` and `ai_written` are recorded and reported, never thresholded. The note is what the author reads in Drafts: say what to change, in the
+warnings[{code, network, text, severity}], note, content_hash}`. The six policy scores carry the thresholds; `risk10`,
+`image_match` and `ai_written` are recorded and reported, never thresholded. **Always send `content_hash`**: the
+value the drafts row carried when you read the post. If someone edited it in between, the server answers
+`409 content_changed` with the current hash and stores nothing; read the post again and review what it says now. The note is what the author reads in Drafts: say what to change, in the
 language of the post. The answer carries the stored `verdict` (the server may have raised it),
 `returned: true` when a `fix` sent it back to Drafts, and `sent`: the send result when your OK
 released the post, or `{skipped, reason}` when a server rule kept it waiting for an owner or admin
