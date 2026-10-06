@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.0"
+  version: "1.6.1"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -528,11 +528,27 @@ copies), `card_id` when it comes from a board card. `media_removed: true` is a `
 verify claims before judging them (`trending.php?source=rss&keyword=` and `search.php?keyword=`:
 who else carries the story; a number without an origin is a `fix`). Use the warning codes the
 policy lists (`policy_*` for a block rule, `fix_*` for a fix rule) with the network and the
-severity (`block`, `warn`, `info`).
+severity (`block`, `warn`, `info`). Four checks go on EVERY post, whatever the rule says:
+- **The picture against the text.** Open the media (or the rendered `design`). Does it show the
+  subject, place, person and numbers the text names? Score it `image_match` (0 to 100); a picture that
+  shows something else, or contradicts the text, is a `fix_image_mismatch` warning.
+- **Spelling and grammar** in the language of the post (the `grammar` score; errors are `fix_language`).
+- **Written by an AI?** Estimate `ai_written` (0 to 100) from the tells (generic openers, lists of
+  three, no first-hand detail, em dashes, a closing question). It is a reading, not a violation: say
+  it in the note so the author can rewrite in their own voice.
+- **Facts and the DOI rule.** Verify every claim (`trending.php?source=rss&keyword=`,
+  `search.php?keyword=`, the web). A false or unverifiable claim is `fake_news` down and a
+  `fix_source` (or `policy_misinfo` when it can harm). A scientific, medical or statistical claim
+  **needs a DOI or a link to the primary source in the post**; without one, warn `fix_doi` and say
+  in the note that the community rule requires the paper: the author is flagged for it.
+
+Then give the post ONE overall danger reading, `risk10`, from 1 (safe to publish) to 10 (breaks a
+network's terms). The server reports it per collaborator; it never changes the verdict by itself.
 
 **5. Leave ONE review.** `POST schedule.php?action=review` with `{id, verdict, score, scores
-{tos_risk, rights, fake_news, sensationalism, brand, grammar}, warnings[{code, network, text,
-severity}], note}`. The note is what the author reads in Drafts: say what to change, in the
+{tos_risk, rights, fake_news, sensationalism, brand, grammar, risk10, image_match, ai_written},
+warnings[{code, network, text, severity}], note}`. The six policy scores carry the thresholds; `risk10`,
+`image_match` and `ai_written` are recorded and reported, never thresholded. The note is what the author reads in Drafts: say what to change, in the
 language of the post. The answer carries the stored `verdict` (the server may have raised it),
 `returned: true` when a `fix` sent it back to Drafts, and `sent`: the send result when your OK
 released the post, or `{skipped, reason}` when a server rule kept it waiting for an owner or admin
@@ -541,17 +557,31 @@ released the post, or `{skipped, reason}` when a server rule kept it waiting for
 **6. Touch nothing else.** Never `update` someone else's post, never `approve`, never `cancel`. Your
 only write is `review`.
 
-**7. Report** one line per post (id, verdict, the reason when it is not `ok`), or one line saying
-the queue was empty.
+**7. Report** one line per post (id, verdict, risk10, the reason when it is not `ok`), or one line
+saying the queue was empty.
+
+**Flags per collaborator.** Every review you leave is counted against the post's author:
+`GET schedule.php?action=review_stats&days=7|14|30` (owner or admin token) returns, per person or
+agent, reviews, ok / fix / block, `flags` (a fix or block, or any `policy_*` / `fix_*` warning),
+`codes` (how many of each rule), `avg_risk10` and `last_flag_at`. The Team page shows the same by
+week, fortnight and month. Use the codes exactly as the policy lists them: a misspelled code counts
+for nothing.
 
 **Setting up the job.** The user asks for it once, in words like these, with a token minted for the
 reviewer on the API Access page and ticked "their OK publishes" on the Team page:
 
 > Every 10 minutes, with my reviewer token: review the posts in Review of every project that have
-> no verdict of yours on their current content. Read the policy first (policy.php), apply it to
-> every network, and leave one review per post with verdict, scores, warnings per network and a
-> note that says what to change. Give OK only when every rule passes. Never edit, approve or
-> cancel. End each pass with one line per post.
+> no verdict of yours on their current content. Read the policy first (GET /policy.php), apply it
+> to every target network, and leave one review per post with verdict, scores, warnings per
+> network and a note that says what to change, in the post's language. On every post also: check
+> that the picture shows what the text says (image_match 0-100; a mismatch is fix_image_mismatch),
+> check spelling and grammar in the post's language, estimate how likely the text was written by
+> an AI (ai_written 0-100, say it in the note), verify the claims against the corpus and the web
+> and flag fake news, and when the post makes a scientific, medical or statistical claim require a
+> DOI or a link to the primary source: without one, flag fix_doi and tell the author it breaks the
+> community rule. Give every post a risk10 from 1 (safe) to 10 (breaks a network's terms). Give OK
+> only when every rule passes. Never edit, approve or cancel. End each pass with one line per
+> post.
 
 In Claude Code that is `/loop 10m` with this text (or the `/viralhunt:review` command); other
 clients run it from their own scheduler. The job the user set up is the authorization for every

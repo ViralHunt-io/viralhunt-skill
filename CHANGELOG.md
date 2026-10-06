@@ -3,6 +3,15 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.1 (2026-10-06)
+
+- The reviewer checks four more things on every post (section 5c): the picture against the text (`image_match`,
+  `fix_image_mismatch`), spelling and grammar, whether an AI wrote it (`ai_written`, a reading in the note), and
+  the facts, with the DOI rule: a scientific, medical or statistical claim without a DOI or a primary source is
+  `fix_doi` and the author is flagged. One overall danger reading per post, `risk10` (1 safe, 10 breaks a
+  network's terms). `GET schedule.php?action=review_stats&days=` counts flags per collaborator (week, fortnight,
+  month); the Team page shows the same. The policy lists the new codes and the extra scores.
+
 ## 1.6.0 (2026-10-05)
 
 - The reviewer job (section 5c): the content rule lives on the platform (`GET policy.php`: what blocks, what
