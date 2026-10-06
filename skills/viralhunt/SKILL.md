@@ -596,6 +596,10 @@ Agent rules:
 
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
+The answer also carries `events[]`, the delivery log (every step the post took: created, accepted by
+PostProxy with its id, published with its link, refused with the network's reason, retried, stale,
+canceled, reviewed, approved; times in UTC), and `support_text`, the plain text to hand the user
+when they ask "what happened to my post": paste it as it is, it is written for support.
 
 What the words mean, so you report them right:
 - `scheduled`: queued for its time. `processing`: handed to the networks, waiting for their
