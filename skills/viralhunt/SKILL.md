@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.3"
+  version: "1.6.4"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -179,6 +179,16 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{�
   Tumblr's corpus fills slowly, so `7d` can be empty there: use `30d` or `all` for `tumblr`.
 - optional: `keyword=...`, `min_engagement=N`, `subreddit=name` (reddit), `page=N`,
   `per_page=N` (max 100)
+- `category=<name or id>` (**rss only**): narrows the news to ONE category. The list, with how
+  many articles each one brought in the last 7 and 30 days, is `GET news-categories.php` (not
+  `categories.php`, which is the Editorial Board's). Read it once per session before asking for
+  news on a subject: "technology news" without it is the whole corpus (resorts, recipes, politics).
+  Exact name, case-insensitive; an unknown value is a `422 unknown_category` with the valid names.
+  **Technology and Artificial Intelligence are two categories**: for AI content ask for both, one
+  request each.
+- An unknown parameter is a `422 unknown_parameter` listing the accepted names, never ignored:
+  there is no `topic=` or `section=`; the subject filter for news is `category=`, for social
+  networks `keyword=` or `author=`.
 - `author=<name>` narrows to ONE page or account: a Facebook page name, an X handle or name, a
   TikTok or Instagram username (contains-match). "The most viral posts of the page Comunidad
   Biológica in 2025" is `source=facebook&author=Comunidad Biológica&time_range=1y&sort=viral`.

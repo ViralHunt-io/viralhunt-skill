@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.4 (2026-10-07)
+
+- News categories: `GET news-categories.php` lists the categories of the news corpus with counts; `trending.php?source=rss`
+  takes `category=<name or id>` (exact, case-insensitive; `422 unknown_category` otherwise). Technology and Artificial
+  Intelligence are two categories. An unknown query parameter on trending is now a `422 unknown_parameter` instead of
+  200 with the unfiltered corpus. `page=N` is pagination again on social sources (it was read as an author alias).
+
 ## 1.6.3 (2026-10-07)
 
 - The reviewer judges by kind (policy `kinds`, version 2026-10-07): a meme, a joke, a quote or an opinion makes no
