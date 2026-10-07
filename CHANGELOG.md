@@ -3,6 +3,11 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.9 (2026-10-07)
+
+- `kind` on a post (create, update, drafts rows): what it IS, fact | meme | quote | opinion | promo, declared by the
+  author or taken from its board card. The reviewer applies only that kind's rules (policy 2026-10-07.5).
+
 ## 1.6.8 (2026-10-07)
 
 - `overrides[account]` takes `first_comment` and `thread` per account, next to `body` and `media`; a thread on Bluesky or

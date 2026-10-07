@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.8"
+  version: "1.6.9"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -335,6 +335,7 @@ time, and get a yes before sending it (see Safety rules).
   "scheduled_at": "2026-08-01T15:30:00Z", // ISO-8601 UTC; omit = publish immediately
   "first_comment": "Link in comments 👇",  // optional; posted as the first comment
   "author_notes": "Source: https://doi.org/10.1038/… (the paper). Picture: our own render.",  // for the reviewer, NEVER published: the source link goes here, not in body (a link in the body cuts the reach)
+  "kind": "fact",                              // what the post IS: fact | meme | quote | opinion | promo. The reviewer applies only that kind's rules; a post from a card takes the card's category when you omit it
   "draft": true,                          // save it in Drafts instead of sending (see 5b)
   "overrides": {                              // per network or per account_id: only what THAT account needs to differ
     "bluesky": {"body": "the 300-character version", "thread": [{"body": "part 2"}, {"body": "part 3"}]},   // a thread: X and Threads natively, Bluesky and Mastodon as a reply chain
@@ -556,7 +557,9 @@ from memory.
 in Review with no verdict on their current content (never reviewed, or edited after the last
 verdict). Nothing else needs you.
 
-**3. Read the whole post.** `author_notes` first: what the author tells you and never publishes (the
+**3. Read the whole post.** `kind` first, when it is there: what the author says the post IS
+(fact, meme, quote, opinion, promo). Apply that kind's rules and argue only when the content plainly
+contradicts it, in the note. Then `author_notes`: what the author tells you and never publishes (the
 source link, where the picture comes from, what to check). A link there satisfies the source rule;
 links never go in the body, the networks cut the reach, so never ask for one there. Then `body`,
 `media` (open the picture; a `design` is rendered by `get`),
