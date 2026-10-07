@@ -510,6 +510,22 @@ user what you changed because of it.
 
 ## 5c. The reviewer: the content rule and the job every ten minutes
 
+**Why this flow exists.** Teams publish by hand to many accounts a day, and the mistakes that
+slip through are the expensive ones: a claim nobody verified, a picture or a clip that belongs to
+someone else, a text in the wrong language for the brand, a caption that reads as spam. The
+networks answer those with lost reach, removed posts and strikes on the account, and a strike is
+not undone by deleting the post. Two more facts shape the rules below:
+- **A link in the body cuts the reach** on every network, so a post never carries its source as a
+  link in the text. The body names the source; the link goes in `author_notes` (private, for the
+  reviewer) or in the first comment. "No source" means no link in the notes or the comment, never
+  "no link in the body".
+- **The record has to be verifiable afterwards.** Every review is stored with its scores and its
+  warning codes against the post's author, so the owner can see per collaborator, per week, who
+  keeps missing the source or posting someone else's picture, and fix the habit, not the post.
+The reviewer does not replace the people: it reads what they wrote and what they told it in
+`author_notes`, applies one rule for everyone, and lets the routine go out on time while the
+doubtful waits for a person.
+
 The organization can give one token the job of checking what waits in Review, so posts from
 collaborators and from the creating agent go out on time without a person reading each one, and
 nothing that breaks a network's rules goes out at all. The reviewer is a token of its own: the
