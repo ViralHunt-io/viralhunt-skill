@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.5 (2026-10-07)
+
+- The calendar base (section 8c): `GET calendar.php` returns the international days and the anniversaries of science,
+  technology, space, health, the environment and civilization of a window, each with `why`; `mark_used`; the recipe
+  source `calendar` for standing orders like "one post on every big science day".
+
 ## 1.6.4 (2026-10-07)
 
 - News categories: `GET news-categories.php` lists the categories of the news corpus with counts; `trending.php?source=rss`

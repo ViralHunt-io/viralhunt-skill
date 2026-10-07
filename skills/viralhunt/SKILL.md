@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.4"
+  version: "1.6.5"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -699,6 +699,29 @@ which is what the quote templates fit.
   so the next day's pick is a different quote. For a month at once, fetch `per_page=30`, schedule
   one per day at the network's best time (section 3), and mark each as used.
 
+## 8c. Calendar (the days worth a post, and why)
+
+`GET calendar.php?date=today&days=7&category=science,technology&min_importance=2&lang=en` returns
+the international days and the anniversaries of the window: `title`, `why` (what is celebrated or
+what happened, and why it matters: write the caption FROM it, never from memory), `kind`
+(`observance` repeats every year, `since_year`; `event`, `birth`, `death` carry `year` and
+`years_ago`), `category` (science, technology, space, health, environment, humanity, civilization,
+education, culture, economy), `origin` (UN, UNESCO, WHO, Wikipedia, ViralHunt for the verified
+seed), `importance` (3 = most brands can post about it, 2 = worth it inside its category, 1 = a
+niche fact), `image_url` + `image_credit` (a free Wikipedia thumbnail when there is one: check the
+article's licence before using it under a brand), `source_url`, `verified`.
+
+- **Plan ahead:** `days=7` or `days=31` on a Monday is how you tell the user what is coming
+  ("Thursday is World Science Day, Sunday the Moon landing turns 57"). Post ON the day.
+- **The ephemeris template** (`vh-ephemeris`: the year huge, the date, one line, a picture) is
+  made for an `event`/`birth`/`death`; the news frame and the tip card fit an `observance`.
+- **Mark what you used:** `POST calendar.php {"action":"mark_used","calendar_id":N}` so
+  `unused=1` skips it next year. `GET calendar.php?stats=1` says how much the base holds.
+- A recipe with `source: calendar` (section 10) is the standing order: "one post on every big
+  science day"; its `source_call` is this request with the recipe's categories and importance.
+- Sensitive dates (Hiroshima, the Holocaust, Chernobyl) are in the base because brands post about
+  them; the tone is remembrance, never a hook. When in doubt, ask the user before scheduling.
+
 ## 9. Content templates (make the image, don't just write the caption)
 
 ViralHunt ships **layout templates** — HTML + CSS + a variable manifest — so the graphics you
@@ -790,7 +813,7 @@ A **recipe** is a standing order a person saved in the app (Recipes): what to po
 source, with which template, in which format, on which networks and how often. Read them before
 asking what to do for a brand:
 
-`GET recipes.php?project_id=N` → each recipe carries `source` (`quotes`, `trending`, `manual`),
+`GET recipes.php?project_id=N` → each recipe carries `source` (`quotes`, `trending`, `calendar`, `manual`),
 `source_params`, and `source_call` (the exact request that gets the content, paste it), the
 `template` (`slug` to fetch with `templates.php?slug=`), `format`, `networks`, `cadence`
 (`daily`, `weekdays`, `weekly`, `manual`), `post_time` in the project's timezone (null = the
