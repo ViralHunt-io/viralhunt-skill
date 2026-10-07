@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.6"
+  version: "1.6.7"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -334,6 +334,7 @@ time, and get a yes before sending it (see Safety rules).
   "networks": ["instagram","facebook"],// alternative to target_account_ids
   "scheduled_at": "2026-08-01T15:30:00Z", // ISO-8601 UTC; omit = publish immediately
   "first_comment": "Link in comments 👇",  // optional; posted as the first comment
+  "author_notes": "Source: https://doi.org/10.1038/… (the paper). Picture: our own render.",  // for the reviewer, NEVER published: the source link goes here, not in body (a link in the body cuts the reach)
   "draft": true,                          // save it in Drafts instead of sending (see 5b)
   "overrides": {"instagram": {"body": "…"}}, // per-network copy or media (keyed by network or account_id)
   "card_id": 123,                         // the board card it comes from (optional)
@@ -532,7 +533,10 @@ from memory.
 in Review with no verdict on their current content (never reviewed, or edited after the last
 verdict). Nothing else needs you.
 
-**3. Read the whole post.** `body`, `media` (open the picture; a `design` is rendered by `get`),
+**3. Read the whole post.** `author_notes` first: what the author tells you and never publishes (the
+source link, where the picture comes from, what to check). A link there satisfies the source rule;
+links never go in the body, the networks cut the reach, so never ask for one there. Then `body`,
+`media` (open the picture; a `design` is rendered by `get`),
 `targets` (every network it goes to), `scheduled_at`, `first_comment`, `overrides` (per-network
 copies), `card_id` when it comes from a board card. `media_removed: true` is a `fix` on its own.
 

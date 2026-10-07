@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.7 (2026-10-07)
+
+- `author_notes` on posts (create, update, drafts rows, get): what the author tells the reviewer and never publishes. The
+  source link goes there (or in the first comment), never in the body; the policy's `fix_source` means "no link in
+  author_notes or first comment". Adding the notes changes the content hash, so the reviewer looks again.
+
 ## 1.6.6 (2026-10-07)
 
 - The reviewer's key with a safety catch (5c): an OK from a trusted reviewer releases the post only inside the policy's
