@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.9"
+  version: "1.6.10"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -189,6 +189,9 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{�
 - An unknown parameter is a `422 unknown_parameter` listing the accepted names, never ignored:
   there is no `topic=` or `section=`; the subject filter for news is `category=`, for social
   networks `keyword=` or `author=`.
+- Every account in `targets.accounts[]` carries `text_limit`, the hard limit of its network (X 280,
+  Bluesky 300, Threads 500…); `media_limits[network].text` is the same table. Write the short copy
+  for those accounts in `overrides` instead of letting the network cut.
 - `author=<name>` narrows to ONE page or account: a Facebook page name, an X handle or name, a
   TikTok or Instagram username (contains-match). "The most viral posts of the page Comunidad
   Biológica in 2025" is `source=facebook&author=Comunidad Biológica&time_range=1y&sort=viral`.
@@ -610,8 +613,18 @@ released the post, or `{skipped, reason}` when a server rule kept it waiting for
 policy's `thresholds.auto_send` (risk10 at most 5, fake_news at least 70, image_match at least 60);
 outside them the post waits for a person. Give the real scores; never lower them to get a post out.
 
-**6. Touch nothing else.** Never `update` someone else's post, never `approve`, never `cancel`. Your
-only write is `review`.
+**6. Touch nothing else.** Never `update` the body, the picture, the accounts or the time of someone
+else's post, never `approve`, never `cancel`. The fix travels in the note: the corrected sentence
+written out, the exact link, the short version for the network that cuts. One exception, server
+enforced: a reviewer marked "Their OK publishes" may `update {id, overrides: {"<account id>":
+{"body": "…"}}}` to add the short copy for a network that cuts (the limits are in
+`targets.accounts[].text_limit` and `policy.text_limits`), and may `update {id, kind}`.
+
+**Four habits the first live days taught** (policy `review_rules`): the score averages, the
+verdict follows the worst problem, so say in the note WHICH problem decided it (a post can score 88
+and be blocked); look for the source before blaming the author, and hand the link ready to paste
+when the claim is true; the note carries the fix, not the diagnosis; rights never relax by kind, a
+stolen meme is still stolen.
 
 **7. Report** one line per post (id, verdict, risk10, the reason when it is not `ok`), or one line
 saying the queue was empty.

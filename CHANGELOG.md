@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.10 (2026-10-07)
+
+- The reviewer's edit boundary (5c): the fix travels in the note; a trusted reviewer may add per-account short copies
+  (`update {overrides}`) and set `kind`, nothing else (server enforced). Four habits from the first live days as policy
+  rules: score versus verdict, search the source before blaming, the note carries the fix, rights never relax by kind.
+  `targets.accounts[].text_limit` and `policy.text_limits` give the hard text limits per network.
+
 ## 1.6.9 (2026-10-07)
 
 - `kind` on a post (create, update, drafts rows): what it IS, fact | meme | quote | opinion | promo, declared by the
