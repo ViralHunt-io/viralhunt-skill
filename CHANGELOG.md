@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.3 (2026-10-07)
+
+- The reviewer judges by kind (policy `kinds`, version 2026-10-07): a meme, a joke, a quote or an opinion makes no
+  factual claim and never gets `fix_doi`, `fix_source` or a fake-news penalty; those are for claims stated as fact.
+  The first live run flagged memes for a missing DOI.
+
 ## 1.6.2 (2026-10-06)
 
 - `review` takes `content_hash` (the drafts row's value when the post was read): the server writes the review only

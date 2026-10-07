@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.2"
+  version: "1.6.3"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -538,11 +538,16 @@ severity (`block`, `warn`, `info`). Four checks go on EVERY post, whatever the r
 - **Written by an AI?** Estimate `ai_written` (0 to 100) from the tells (generic openers, lists of
   three, no first-hand detail, em dashes, a closing question). It is a reading, not a violation: say
   it in the note so the author can rewrite in their own voice.
-- **Facts and the DOI rule.** Verify every claim (`trending.php?source=rss&keyword=`,
-  `search.php?keyword=`, the web). A false or unverifiable claim is `fake_news` down and a
-  `fix_source` (or `policy_misinfo` when it can harm). A scientific, medical or statistical claim
-  **needs a DOI or a link to the primary source in the post**; without one, warn `fix_doi` and say
-  in the note that the community rule requires the paper: the author is flagged for it.
+- **Facts and the DOI rule, by kind.** First decide what the post IS (the policy's `kinds`): a
+  **fact** (states something as true), a **meme** (humor, irony, a reaction picture), a **quote**, an
+  **opinion** or a **promo**. Only a fact gets the full treatment: verify every claim
+  (`trending.php?source=rss&keyword=`, `search.php?keyword=`, the web); a false or unverifiable
+  claim is `fake_news` down and a `fix_source` (or `policy_misinfo` when it can harm); a scientific,
+  medical or statistical claim stated as fact **needs a DOI or a link to the primary source in the
+  post**; without one, warn `fix_doi` and say in the note that the community rule requires the paper.
+  A meme, a joke, a quote or an opinion makes no factual claim: no source, no DOI, no fake-news
+  reading, only the network rules, rights and spelling. Do not read humor literally; when in doubt
+  between fact and humor, say so in the note and do not flag.
 
 Then give the post ONE overall danger reading, `risk10`, from 1 (safe to publish) to 10 (breaks a
 network's terms). The server reports it per collaborator; it never changes the verdict by itself.
@@ -581,11 +586,13 @@ reviewer on the API Access page and ticked "their OK publishes" on the Team page
 > that the picture shows what the text says (image_match 0-100; a mismatch is fix_image_mismatch),
 > check spelling and grammar in the post's language, estimate how likely the text was written by
 > an AI (ai_written 0-100, say it in the note), verify the claims against the corpus and the web
-> and flag fake news, and when the post makes a scientific, medical or statistical claim require a
-> DOI or a link to the primary source: without one, flag fix_doi and tell the author it breaks the
-> community rule. Give every post a risk10 from 1 (safe) to 10 (breaks a network's terms). Give OK
-> only when every rule passes. Never edit, approve or cancel. End each pass with one line per
-> post.
+> and flag fake news, and when the post states a scientific, medical or statistical claim as fact
+> require a DOI or a link to the primary source: without one, flag fix_doi and tell the author it
+> breaks the community rule. Judge by what the post is: a meme, a joke, a quote or an opinion
+> makes no factual claim, so it gets no source or DOI demand and no fake-news reading, only the
+> network rules, rights and spelling; do not read humor literally. Give every post a risk10 from 1
+> (safe) to 10 (breaks a network's terms). Give OK only when every rule passes. Never edit,
+> approve or cancel. End each pass with one line per post.
 
 In Claude Code that is `/loop 10m` with this text (or the `/viralhunt:review` command); other
 clients run it from their own scheduler. The job the user set up is the authorization for every
