@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.5"
+  version: "1.6.6"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -545,6 +545,10 @@ severity (`block`, `warn`, `info`). Four checks go on EVERY post, whatever the r
   subject, place, person and numbers the text names? Score it `image_match` (0 to 100); a picture that
   shows something else, or contradicts the text, is a `fix_image_mismatch` warning.
 - **Spelling and grammar** in the language of the post (the `grammar` score; errors are `fix_language`).
+  **And the language itself:** the drafts row carries `project_lang` (what the project publishes in,
+  set on the Projects page) and `lang`; a post written in another language is `fix_language`, with
+  the expected language in the note. No `project_lang` means the project never declared one: say so
+  in the note instead of guessing.
 - **Written by an AI?** Estimate `ai_written` (0 to 100) from the tells (generic openers, lists of
   three, no first-hand detail, em dashes, a closing question). It is a reading, not a violation: say
   it in the note so the author can rewrite in their own voice.
@@ -571,7 +575,10 @@ value the drafts row carried when you read the post. If someone edited it in bet
 language of the post. The answer carries the stored `verdict` (the server may have raised it),
 `returned: true` when a `fix` sent it back to Drafts, and `sent`: the send result when your OK
 released the post, or `{skipped, reason}` when a server rule kept it waiting for an owner or admin
-(`self_review`, `not_trusted`, `no_time`, `too_soon`, `auto_send_off`). Report `sent` as it is.
+(`self_review`, `not_trusted`, `no_time`, `too_soon`, `risk_threshold`, `auto_send_off`). Report `sent` as it is.
+`risk_threshold` is the safety catch: even with the key, an OK releases by itself only inside the
+policy's `thresholds.auto_send` (risk10 at most 5, fake_news at least 70, image_match at least 60);
+outside them the post waits for a person. Give the real scores; never lower them to get a post out.
 
 **6. Touch nothing else.** Never `update` someone else's post, never `approve`, never `cancel`. Your
 only write is `review`.
@@ -580,7 +587,8 @@ only write is `review`.
 saying the queue was empty.
 
 **Flags per collaborator.** Every review you leave is counted against the post's author:
-`GET schedule.php?action=review_stats&days=7|14|30` (owner or admin token) returns, per person or
+`GET schedule.php?action=review_stats&days=7|14|30` (owner, admin, or a reviewer marked "Their OK
+publishes") returns, per person or
 agent, reviews, ok / fix / block, `flags` (a fix or block, or any `policy_*` / `fix_*` warning),
 `codes` (how many of each rule), `avg_risk10` and `last_flag_at`. The Team page shows the same by
 week, fortnight and month. Use the codes exactly as the policy lists them: a misspelled code counts

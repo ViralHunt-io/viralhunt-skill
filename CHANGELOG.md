@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.6 (2026-10-07)
+
+- The reviewer's key with a safety catch (5c): an OK from a trusted reviewer releases the post only inside the policy's
+  `thresholds.auto_send` (risk10 ≤ 5, fake_news ≥ 70, image_match ≥ 60); otherwise `sent.skipped = risk_threshold` and a
+  person decides. Drafts rows carry `project_lang` (the project's declared language): another language is `fix_language`.
+  `review_stats` opens to a reviewer marked "Their OK publishes".
+
 ## 1.6.5 (2026-10-07)
 
 - The calendar base (section 8c): `GET calendar.php` returns the international days and the anniversaries of science,
