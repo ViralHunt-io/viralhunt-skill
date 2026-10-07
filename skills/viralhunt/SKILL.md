@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.7"
+  version: "1.6.8"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -336,7 +336,10 @@ time, and get a yes before sending it (see Safety rules).
   "first_comment": "Link in comments 👇",  // optional; posted as the first comment
   "author_notes": "Source: https://doi.org/10.1038/… (the paper). Picture: our own render.",  // for the reviewer, NEVER published: the source link goes here, not in body (a link in the body cuts the reach)
   "draft": true,                          // save it in Drafts instead of sending (see 5b)
-  "overrides": {"instagram": {"body": "…"}}, // per-network copy or media (keyed by network or account_id)
+  "overrides": {                              // per network or per account_id: only what THAT account needs to differ
+    "bluesky": {"body": "the 300-character version", "thread": [{"body": "part 2"}, {"body": "part 3"}]},   // a thread: X and Threads natively, Bluesky and Mastodon as a reply chain
+    "12": {"media": ["https://…/other-picture.jpg"], "first_comment": "this account's own first comment"}
+  },
   "card_id": 123,                         // the board card it comes from (optional)
   "design": {"template": "studio-news-frame-2", "format": "feed",   // the picture as a filled template (see 5b)
              "variables": {"text": "…", "highlight": "…", "image": "https://…", "caption": "…"}}
@@ -427,6 +430,10 @@ Your `create` without `draft: true` lands straight in Review (the post is comple
   Render it (section 9, step 5) and store the PNG with `update {id, png: "data:image/png;base64,…"}`;
   it becomes the post's first picture. When you cannot render, leave it: the Drafts page renders
   it when a person approves.
+- Per account, `overrides[account_id]` may carry `body`, `media`, `first_comment` (that account's own,
+  instead of the post's) and `thread` (its own thread). Lengths: X 280, Bluesky 300, Threads 500,
+  Mastodon 500, LinkedIn 3000, Instagram and TikTok 2200: write the short version for the short
+  networks instead of letting them cut the text.
 - `POST schedule.php?action=update` with `{id, body?, media?, overrides?, scheduled_at?,
   target_account_ids?|networks?, first_comment?, design?, png?}` edits a draft in place (no
   confirmation needed: nothing is sent). Every field a person changes afterwards is logged

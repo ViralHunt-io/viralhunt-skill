@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.8 (2026-10-07)
+
+- `overrides[account]` takes `first_comment` and `thread` per account, next to `body` and `media`; a thread on Bluesky or
+  Mastodon goes out as a reply chain after the post is live (X and Threads natively). Write the short version for the
+  short networks instead of letting them cut the text.
+
 ## 1.6.7 (2026-10-07)
 
 - `author_notes` on posts (create, update, drafts rows, get): what the author tells the reviewer and never publishes. The
