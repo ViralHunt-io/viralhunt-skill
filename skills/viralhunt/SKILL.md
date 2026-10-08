@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.11"
+  version: "1.6.12"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -938,9 +938,10 @@ in-progress column → comment progress → move to the `is_done` column. Full d
 | 429 | `daily_limit_reached` | Free plan: today's 24 queries are used; tell the user the reset time from `details.reset` and offer the paid plans |
 | 402 | `insufficient_credits` | the account has no credits for a render; say how many it needs (`details.required`) |
 | 403 | `forbidden` | approving a draft needs an owner or admin token; say so, do not retry |
+| 403 | `insufficient_scope` | the token's permission group (reader, writer, reviewer, publisher, full) lacks what this call needs (`details.required`); say which group would do and do not retry. `GET /account` shows the token's own group under `permissions` |
 | 409 | `not_approvable` | the draft is blocked by its last review, or is not a draft any more; re-read it |
 | 409 | `not_editable` / `already_published` | the post is publishing or published; re-fetch and tell the user |
-| 413 | `upload_too_large` | over 50 MB through the API: host the file at a public URL and pass it in `media` |
+| 413 | `upload_too_large` | over the server's limit (`targets.upload_max_bytes`, `details.upload_max_bytes`): compress the file or host it at a public URL and pass it in `media` |
 | 422 | `no_project` | the `project_id` or `project` you passed is not in this organization |
 | 502 | `publish_failed` | every target refused; the message lists each network's reason |
 | 503 | `scheduler_unavailable` / `publishing_unavailable` | scheduling not enabled on this site |
