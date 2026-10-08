@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.13"
+  version: "1.6.14"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -637,6 +637,12 @@ written out, the exact link, the short version for the network that cuts. One ex
 enforced: a reviewer marked "Their OK publishes" may `update {id, overrides: {"<account id>":
 {"body": "…"}}}` to add the short copy for a network that cuts (the limits are in
 `targets.accounts[].text_limit` and `policy.text_limits`), and may `update {id, kind}`.
+**A text too long for one account is never a `fix`.** It is the one thing you repair yourself:
+write the short version, save it with that `update {overrides}`, then review the post on its
+merits. Only when `account.review.can_release` is false put the trimmed copy in the note. The
+server refuses a too-long text at `submit`, at `create` into Review and at every send, naming the
+account and the excess, so a post that reaches you over the limit is rare; when it does, fix it,
+do not return it.
 
 **Four habits the first live days taught** (policy `review_rules`): the score averages, the
 verdict follows the worst problem, so say in the note WHICH problem decided it (a post can score 88

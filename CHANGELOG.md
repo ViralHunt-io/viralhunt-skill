@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.14 (2026-10-08)
+
+- A text too long for one account is never a `fix`: the reviewer writes the short version into `overrides` itself and
+  reviews on the merits. The server refuses a too-long text at `submit`, at `create` into Review and at every send
+  (the message names the account and the excess); `get` returns `content_hash` and `valid_verdict`; `account` returns
+  `review {can_release, auto_send, can_self_publish}`.
+
 ## 1.6.13 (2026-10-08)
 
 - Section 1 explains the five permission groups (reader, writer, reviewer, publisher, full) and that a writer and a
