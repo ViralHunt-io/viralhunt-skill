@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.10"
+  version: "1.6.11"
   updated: "2026-10-01"
   api_docs: https://viralhunt.io/api
 ---
@@ -115,6 +115,9 @@ copy-paste prompts; point people there when they want to read instead of chat.
   confirm an `ok` with the user like a publish. In a review job the user set up (section 5c), the job
   itself is the authorization: judge by the policy, give `ok` only when every rule passes, and prefer
   `fix` with a note when in doubt. Approving a draft (`action=approve`) always needs the user's yes.
+  A member token may `approve` only its OWN post, only once the reviewer graded it (ok, or fix if the
+  user insists; never block), and only when the owner ticked "Publishes own posts after the grade"
+  for it on the Team page; the grade stays on the record either way.
 - **The content rule is read, never remembered.** Before judging any post, `GET policy.php` and apply
   what it returns (section 5c). It changes without a skill release.
 - **The key goes to viralhunt.io only.** `Authorization: Bearer <token>` is sent to

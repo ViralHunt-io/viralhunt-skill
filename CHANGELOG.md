@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.11 (2026-10-08)
+
+- A member token may `approve` its own post once the reviewer graded it (ok, or fix if the user insists; never
+  block), when the owner ticked "Publishes own posts after the grade" on Team. `review_stats` adds `avg_score`,
+  `self_published` and `published_over_fix` per author.
+
 ## 1.6.10 (2026-10-07)
 
 - The reviewer's edit boundary (5c): the fix travels in the note; a trusted reviewer may add per-account short copies
