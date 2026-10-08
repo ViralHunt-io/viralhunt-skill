@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.13 (2026-10-08)
+
+- Section 1 explains the five permission groups (reader, writer, reviewer, publisher, full) and that a writer and a
+  reviewer never share a token. Section 5c: the server catch-up releases a valid OK that was skipped (auto-send off,
+  reviewer not yet trusted) every two minutes, so never re-review a post to re-trigger it.
+
 ## 1.6.12 (2026-10-08)
 
 - Tokens carry a permission group (reader, writer, reviewer, publisher, full): a call outside it answers
