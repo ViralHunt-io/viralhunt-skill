@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.12 (2026-10-08)
+
+- Tokens carry a permission group (reader, writer, reviewer, publisher, full): a call outside it answers
+  `403 insufficient_scope` with `details.required`; `GET /account` shows the token its own group under `permissions`.
+  `targets.upload_max_bytes` says the biggest file `upload` takes on this server; the 413 names it too.
+
 ## 1.6.11 (2026-10-08)
 
 - A member token may `approve` its own post once the reviewer graded it (ok, or fix if the user insists; never
