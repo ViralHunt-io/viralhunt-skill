@@ -155,6 +155,15 @@ Every call needs a personal token. The user creates one at
 gives it to you. It looks like `vhk_...`. If the user has no account, send them to
 **https://viralhunt.io/claude**: the Free plan is free forever, no card, and comes with a key.
 
+**Every token has a permission group**, chosen on that form under "What it may do": **reader**
+(only reads), **writer** (finds content, drafts posts, submits them to Review; never approves),
+**reviewer** (grades what waits in Review), **publisher** (writes, reviews and approves, a person's
+own assistant) or **full** (everything the member can do). `GET account.php` tells you yours under
+`permissions`. A call outside the group answers `403 insufficient_scope` with `details.required`:
+do not retry, say which group the task needs and let the user mint it. The group only removes
+rights: the member's role and the review rules still apply on top. An agent that writes should
+hold a writer token and the one that reviews a reviewer token, never the same token for both.
+
 Send it on every request as a bearer header (the value is the user's token, which starts with the
 letters `vhk_`; the examples below use an environment variable, never a literal):
 
