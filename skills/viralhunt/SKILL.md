@@ -624,6 +624,12 @@ released the post, or `{skipped, reason}` when a server rule kept it waiting for
 `risk_threshold` is the safety catch: even with the key, an OK releases by itself only inside the
 policy's `thresholds.auto_send` (risk10 at most 5, fake_news at least 70, image_match at least 60);
 outside them the post waits for a person. Give the real scores; never lower them to get a post out.
+An OK is not lost when a rule skipped it: the server runs a **catch-up** every two minutes and
+when the organization turns auto-send on. A post in Review whose newest verdict is a valid OK on
+its current content (by a reviewer who may release, not its author, under the thresholds, with a
+time, given more than 15 minutes ago) goes out then, at its time or at once if that time passed.
+So after `auto_send_off` or `not_trusted` you never review the same post again to "re-trigger" it;
+tell the user the switch or the tick it needs, and the post leaves by itself once it is set.
 
 **6. Touch nothing else.** Never `update` the body, the picture, the accounts or the time of someone
 else's post, never `approve`, never `cancel`. The fix travels in the note: the corrected sentence
