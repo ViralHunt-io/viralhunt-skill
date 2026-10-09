@@ -18,8 +18,8 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.14"
-  updated: "2026-10-01"
+  version: "1.6.15"
+  updated: "2026-10-09"
   api_docs: https://viralhunt.io/api
 ---
 
@@ -449,7 +449,10 @@ Your `create` without `draft: true` lands straight in Review (the post is comple
 - Per account, `overrides[account_id]` may carry `body`, `media`, `first_comment` (that account's own,
   instead of the post's) and `thread` (its own thread). Lengths: X 280, Bluesky 300, Threads 500,
   Mastodon 500, LinkedIn 3000, Instagram and TikTok 2200: write the short version for the short
-  networks instead of letting them cut the text.
+  networks instead of letting them cut the text. On `update`, `overrides` is MERGED per key: send only the
+  accounts you change and the others keep their copy; a key set to `null` removes that account's copy;
+  `overrides_replace: true` replaces the whole map. (Before 2026-10-09 it was replaced whole, which is how one
+  agent's Threads copy erased a person's Bluesky copy.)
 - `POST schedule.php?action=update` with `{id, body?, media?, overrides?, scheduled_at?,
   target_account_ids?|networks?, first_comment?, design?, png?}` edits a draft in place (no
   confirmation needed: nothing is sent). Every field a person changes afterwards is logged

@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.15 (2026-10-09)
+
+- `update {overrides}` merges per account instead of replacing the whole map: send only the accounts you change,
+  `null` removes one, `overrides_replace: true` replaces everything. One agent's Threads copy had erased a person's
+  Bluesky copy and the server refused the send as too long for Bluesky.
+
 ## 1.6.14 (2026-10-08)
 
 - A text too long for one account is never a `fix`: the reviewer writes the short version into `overrides` itself and
