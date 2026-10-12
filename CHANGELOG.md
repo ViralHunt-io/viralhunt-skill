@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.16 (2026-10-12)
+
+- `first_comment` in an override has three states: absent = inherits the post's, `""` = none on this account,
+  text = its own. Removing a comment from one account means sending `""`; dropping the key means inherit, and the
+  post's own comment went out (post 1012).
+
 ## 1.6.15 (2026-10-09)
 
 - `update {overrides}` merges per account instead of replacing the whole map: send only the accounts you change,

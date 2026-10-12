@@ -18,8 +18,8 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.15"
-  updated: "2026-10-09"
+  version: "1.6.16"
+  updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
 
@@ -446,6 +446,10 @@ Your `create` without `draft: true` lands straight in Review (the post is comple
   Render it (section 9, step 5) and store the PNG with `update {id, png: "data:image/png;base64,…"}`;
   it becomes the post's first picture. When you cannot render, leave it: the Drafts page renders
   it when a person approves.
+- `first_comment` inside an override has THREE states: key absent = the account inherits the post's
+  first comment; `""` = this account posts no first comment at all; text = its own. To remove a comment
+  from one account send `"first_comment": ""`, never drop the key (dropping it means inherit, and the
+  post's own comment goes out; post 1012). The sync records where each posted comment came from.
 - Per account, `overrides[account_id]` may carry `body`, `media`, `first_comment` (that account's own,
   instead of the post's) and `thread` (its own thread). Lengths: X 280, Bluesky 300, Threads 500,
   Mastodon 500, LinkedIn 3000, Instagram and TikTok 2200: write the short version for the short
