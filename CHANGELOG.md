@@ -3,6 +3,15 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.18 (2026-10-13)
+
+- Every draft is also an Editorial Board card (`card_id` in the `create` answer) and the card follows the post:
+  Drafts → In review → Scheduled → Published. Collaborators finish the picture and the text from the card.
+- `upload` stores in the organization's cloud storage; `purpose=brand` uploads a logo or a picture for a design
+  (PNG, JPG, WebP, 2 MB, never SVG).
+- `POST templates.php` removes scripts, frames, forms, event handlers and `javascript:` URLs and lists them in
+  `removed`; embedded `data:font/` fonts are accepted.
+
 ## 1.6.17 (2026-10-12)
 
 - On the free plan, when numbers are withheld, the delay applies or the daily cap is reached, the agent says once

@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.17"
+  version: "1.6.18"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -439,7 +439,11 @@ Nothing in either stage has been sent.
   leave verdicts here (`review`); "needs fixes" sends it back to Drafts with the note; an owner or
   admin approves it and it goes out at its time (or at once).
 Your `create` without `draft: true` lands straight in Review (the post is complete); with
-`draft: true` it is a working copy in Drafts. When the server has not migrated the review stage yet
+`draft: true` it is a working copy in Drafts. **Every draft is also a card on the Editorial Board**
+(`card_id` in the answer; pass your own `card_id` to use an existing card): a collaborator opens it,
+changes the picture, adds another one or fixes the text, and the card moves by itself to the
+board's Drafts → In review → Scheduled → Published columns as the post moves. So when you verified a
+story and it is true, leave it as a complete draft and tell the person: the team finishes it there. When the server has not migrated the review stage yet
 (`review_stage_ready: false` on `targets`), everything is a `draft` and the person approves from there.
 
 - `GET schedule.php?action=drafts` (add `&all=1` for every project, `&stage=draft|review` for one
@@ -712,7 +716,11 @@ If you have a local file instead of a URL:
 
 `POST schedule.php?action=upload` — multipart form field `file` (jpg/png/gif/webp/mp4/mov,
 up to 50 MB through the API). Returns `{ "url": "https://..." }`. Pass that URL in `media` on
-create. A bigger video (the app itself takes up to 512 MB in chunks) must already live at a public
+create. Files go to the organization's cloud storage, never to the app server.
+
+A logo or a picture you will place INSIDE a design (a free image on a draft, a card or a
+template): add the form field `purpose=brand`. PNG, JPG or WebP only, up to 2 MB, never SVG; the
+URL that comes back is the only kind the design editor accepts for images. A bigger video (the app itself takes up to 512 MB in chunks) must already live at a public
 https URL: pass that URL in `media` and the publishing service fetches it.
 
 ## 7. Edit or cancel a scheduled post
@@ -886,7 +894,11 @@ Two rules the API enforces, so design for them:
 - Every `{{placeholder}}` in `html` must be declared in `variables`, or the call is
   rejected. A template with an undeclared hole would render blank for whoever fetches it.
 - `html` and `css` are capped at 256KB each. Reference images and fonts by URL — the
-  `fonts` array is how a font travels with the template.
+  `fonts` array is how a font travels with the template. Fonts and pictures embedded as
+  `data:font/…` / `data:image/…` are accepted too.
+- **A template is html, css and images, never code.** Scripts, iframes, forms, `on*=` handlers,
+  `javascript:` URLs and stylesheets from anywhere but Google Fonts are REMOVED before it is
+  stored; the answer lists them in `removed`. Don't put them in: the app injects its own runtime.
 
 Write the manifest as carefully as the layout: `description` is the instruction another
 agent (or you, later) will generate from, and `rules` are the hard constraints it must
