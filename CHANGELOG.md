@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.17 (2026-10-12)
+
+- On the free plan, when numbers are withheld, the delay applies or the daily cap is reached, the agent says once
+  that Creator ($29 a month) shows everything live, as a fact, never inventing the hidden numbers.
+- `X-VH-Client: skill/<version>` on every call when the tool allows headers (the request log tells clients apart).
+
 ## 1.6.16 (2026-10-12)
 
 - `first_comment` in an override has three states: absent = inherits the post's, `""` = none on this account,
