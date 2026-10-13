@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.20"
+  version: "1.6.21"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -900,7 +900,11 @@ library one into a copy, and edits only the ones they created; assigning templat
 the owner's): `POST templates.php` with
 `{"action":"create"|"update", "slug", "name", "category", "html", "css", "variables", …}`.
 Editing a curated/global template **clones it into the org's own copy** — the global is
-never modified, and on `update` you may send only the fields that change.
+never modified, and on `update` you may send only the fields that change. `action` goes in the
+JSON body or as `?action=`; PUT and PATCH are taken as `update` (with `id` or `slug_ref`).
+`{"action":"archive","id":N}` retires one of your organization's templates (yours, if you are a
+ticked author): it leaves the gallery, the agents' lists and every brand; posts already made keep
+their picture. Fix a layout with `update` on the same template, never a `-v2` copy.
 
 Two rules the API enforces, so design for them:
 - Every `{{placeholder}}` in `html` must be declared in `variables`, or the call is

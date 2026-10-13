@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.21 (2026-10-13)
+
+- `POST templates.php` reads `action` from the body or the query string, takes PUT/PATCH as `update`, and has
+  `archive` (own templates; a library template is never archived). Every update used to be read as a create when
+  `action` came in the URL.
+
 ## 1.6.20 (2026-10-13)
 
 - Template authors without being admins: a member or agent the owner ticks "Creates templates" on the Team page may
