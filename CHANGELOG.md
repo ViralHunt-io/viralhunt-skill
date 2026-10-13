@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.19 (2026-10-13)
+
+- A trusted reviewer ("Their OK publishes") fixes the texts inside a designed image of someone else's post:
+  `update {id, design_fields{key: text}, png?}`. Pictures, `caption`, template and layers stay the author's; without a
+  png the old picture leaves (`needs_png`, `render`) and the post is never sent without one.
+
 ## 1.6.18 (2026-10-13)
 
 - Every draft is also an Editorial Board card (`card_id` in the `create` answer) and the card follows the post:

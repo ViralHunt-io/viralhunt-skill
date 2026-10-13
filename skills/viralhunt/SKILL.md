@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.18"
+  version: "1.6.19"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -655,6 +655,15 @@ written out, the exact link, the short version for the network that cuts. One ex
 enforced: a reviewer marked "Their OK publishes" may `update {id, overrides: {"<account id>":
 {"body": "…"}}}` to add the short copy for a network that cuts (the limits are in
 `targets.accounts[].text_limit` and `policy.text_limits`), and may `update {id, kind}`.
+**A typo inside the image is also yours to fix** when the post carries a design (`get` shows
+`design.variables` and `render`): `update {id, design_fields: {"<variable key>": "corrected text"}}`
+changes only those texts (never a picture variable, never `caption`, which is the post's body: use
+`overrides`); the template, the format, the pictures and the layers stay as the author made them. The
+old PNG leaves the post (`needs_png: true` and the new `render` in the answer): if you can render
+(headless Chrome, wait for `[data-vh-ready="1"]`, screenshot `.vh-card`) send it with
+`update {id, design_fields, png: "data:image/png;base64,…"}`; if not, leave it, approving in the app
+renders it, and the post is never sent without its picture. Then review the post on its merits. A
+flat picture (no `design`) cannot be edited: that stays a `fix` with the corrected sentence in the note.
 **A text too long for one account is never a `fix`.** It is the one thing you repair yourself:
 write the short version, save it with that `update {overrides}`, then review the post on its
 merits. Only when `account.review.can_release` is false put the trimmed copy in the note. The
