@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.19"
+  version: "1.6.20"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -894,7 +894,10 @@ The `fonts` array carries woff2 URLs and the `css` already `@font-face`s them, s
 identical everywhere — don't substitute local fonts. Colors are **tokens**, not hex: a variable
 of `type: "token"` takes a key from `palette` (e.g. `"cyan"`), never `#1edbee`.
 
-**Authoring your own templates** (owner/admin): `POST templates.php` with
+**Authoring your own templates** (owner/admin, or a member or agent the owner ticked "Creates
+templates" on the Team page, with a token that can write: that author creates templates, clones a
+library one into a copy, and edits only the ones they created; assigning templates to projects stays
+the owner's): `POST templates.php` with
 `{"action":"create"|"update", "slug", "name", "category", "html", "css", "variables", …}`.
 Editing a curated/global template **clones it into the org's own copy** — the global is
 never modified, and on `update` you may send only the fields that change.

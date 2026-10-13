@@ -3,6 +3,11 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.20 (2026-10-13)
+
+- Template authors without being admins: a member or agent the owner ticks "Creates templates" on the Team page may
+  `POST templates.php` with a writer token (create, clone a library template, edit only their own templates).
+
 ## 1.6.19 (2026-10-13)
 
 - A trusted reviewer ("Their OK publishes") fixes the texts inside a designed image of someone else's post:
