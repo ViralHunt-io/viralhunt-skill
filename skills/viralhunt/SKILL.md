@@ -850,6 +850,9 @@ carousel of many pictures, a screenshot with its own text) → do not force a te
 draft with the original picture in `media` and say so in the draft's note, so the person decides.
 
 `GET templates.php` → the library (lean: no html/css, so it doesn't flood your context).
+It is paginated (`meta.total`, `meta.has_more`; `per_page` up to 100): the organization's own
+templates come first, newest first; `scope=org` lists only them, `scope=global` only the
+library. Every template says `scope`, `organization_id`, `created_by` and `is_active`.
 `GET templates.php?slug=vh-image-card` → **that one template's full spec**, including `html`,
 `css`, `variables`, `formats`, `palette`, `fonts` and `render_tech`.
 

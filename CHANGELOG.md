@@ -8,6 +8,8 @@ the skill is updated in the same commit as the endpoint it describes.
 - `POST templates.php` reads `action` from the body or the query string, takes PUT/PATCH as `update`, and has
   `archive` (own templates; a library template is never archived). Every update used to be read as a create when
   `action` came in the URL.
+- `GET templates.php` lists the organization's own templates first (they were on page 2 behind the 20 library ones),
+  takes `scope=org|global`, and every template carries `organization_id`, `created_by`, `is_active`.
 
 ## 1.6.20 (2026-10-13)
 
