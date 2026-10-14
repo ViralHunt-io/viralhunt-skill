@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.23 (2026-10-14)
+
+- A post whose picture comes from a ViralHunt template ALWAYS carries `design` (slug, format, variables), with the
+  rendered PNG in `media` when the agent rendered it. A PNG alone is a flat picture nobody can edit in the app; the
+  design is what opens the editor on that exact template. A post already sent without it is repaired with
+  `update {id, design}`.
+
 ## 1.6.22 (2026-10-14)
 
 - `trending.php`: `sort=most_commented` works on every network that counts comments (tiktok gained it; on facebook

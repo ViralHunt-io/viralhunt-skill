@@ -152,7 +152,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.22` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.23` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -372,9 +372,12 @@ time, and get a yes before sending it (see Safety rules).
 ```
 
 **The picture comes from the organization's templates, always.** Never attach another page's
-picture as the post's picture. Either render a template yourself (section 9) and pass the PNG in
-`media`, or pass `design` (the template's slug, the format and the dynamic variables) with
-`draft: true`: the app renders it on the Drafts page and exports the PNG when a person approves.
+picture as the post's picture. **Always pass `design`** (the template's slug, the format and the
+dynamic variables) with the post, whether or not you also rendered the PNG yourself: the design is
+what lets a person open the image in the editor later and fix a word or swap the photo. A PNG alone
+is a flat picture nobody can edit (post 1052, 2026-10-14). If you rendered it, pass the PNG in
+`media` too; if you did not, add `draft: true` and the app renders it on the Drafts page and
+exports the PNG when a person approves.
 The original post's photo goes in the template's `image` variable, where the template frames it
 under the brand. Only when no template suits the post, and you say so in the review note, may
 the draft go without a design.
@@ -511,11 +514,11 @@ templates and leave everything in drafts so I evaluate them":
    (`lang` on `targets`), or the one the user asked for; never switch languages on your own.
 4. Pick the template by the post (`suits`, favourites first, the organization's own copies
    before the library, the template's `instructions`). Fill only its `dynamic` variables, with
-   the post's own picture as `image` and a headline of your own as `text`. Render the PNG
-   (section 9, step 5) or, when you cannot render, pass `design` and let the app render it.
+   the post's own picture as `image` and a headline of your own as `text`. Pass `design` always;
+   render the PNG too (section 9, step 5) when you can, and let the app render it when you cannot.
    When no template fits, say so in the review note; never ship the other page's picture as
    the post's picture.
-5. `schedule.php?action=create` with the PNG in `media` (or the `design`), the copy in `body`,
+5. `schedule.php?action=create` with the `design` (and the PNG in `media` when you rendered it), the copy in `body`,
    and `scheduled_at` spread over the days at the project's best hours (section 3), five a day
    unless told otherwise. As an agent token it lands in Review, complete and dated; pass
    `draft: true` only when the user wants to touch it before anyone judges it. Then
