@@ -152,7 +152,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.17` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.22` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -193,7 +193,9 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{â€
   `most_viewed`, `most_commented`, `most_retweeted`, `most_reposted`, `most_saved`,
   `most_upvoted` (reddit), `most_boosted` (mastodon), `most_noted` (tumblr), `most_points`
   (hackernews); for `rss`: `trending`, `engagement`, `growth`, `bluesky`, `mentions`, `coverage`,
-  `hn`, `comments`
+  `hn`, `comments`. `most_commented` is accepted on EVERY network that counts comments (facebook and
+  pinterest also take `most_comments`; x, bluesky and mastodon also take `most_replied`): one name ranks the
+  discussions anywhere, which is what to use when the person wants threads to comment in.
 - `time_range`: any number with a unit (`24h`, `7d`, `30d`, `2w`, `3m`, `1y`), a bare number of days (`30`), or `all`, on the post's own publish date. Default `24h`. An unknown value is a 422, never a silent fallback.
   Tumblr's corpus fills slowly, so `7d` can be empty there: use `30d` or `all` for `tumblr`.
 - optional: `keyword=...`, `min_engagement=N`, `subreddit=name` (reddit), `page=N`,

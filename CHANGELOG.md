@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.22 (2026-10-14)
+
+- `trending.php`: `sort=most_commented` works on every network that counts comments (tiktok gained it; on facebook
+  and pinterest it means `most_comments`, on x, bluesky and mastodon `most_replied`). One sort name for "the threads
+  to comment in".
+
 ## 1.6.21 (2026-10-13)
 
 - `POST templates.php` reads `action` from the body or the query string, takes PUT/PATCH as `update`, and has
