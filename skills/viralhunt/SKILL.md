@@ -155,7 +155,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.25` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.26` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -963,6 +963,14 @@ Two rules the API enforces, so design for them:
 - `html` and `css` are capped at 256KB each. Reference images and fonts by URL — the
   `fonts` array is how a font travels with the template. Fonts and pictures embedded as
   `data:font/…` / `data:image/…` are accepted too.
+- **Inline formatting inside a text variable.** Any text drawn on the card may carry four marks,
+  plain text: `**bold**`, `*italic*`, `__underline__` and `{c:#e11d48}coloured{/c}` (or
+  `{c:accent}…{/c}` for the template's own accent, the same colour as the highlight). They nest,
+  they count toward `max_chars`, and they never go in `caption` (the post body is plain text). The
+  html of every template carries the converter (`vh-rich-runtime`), so you substitute the value as
+  plain text and render as usual; `GET templates.php?runtime=1` returns the grammar
+  (`inline_marks`) and the script. Use them when the owner's `instructions` ask for emphasis, or when
+  a figure or a name deserves it; one or two per card, never a whole paragraph in bold.
 - **Design for two languages.** When the brand publishes in two languages, the same template
   renders both: give the headline room to grow (Spanish runs 15 to 20% longer than English) and
   use `data-fit` on it so a longer translation shrinks instead of overflowing; keep the fixed

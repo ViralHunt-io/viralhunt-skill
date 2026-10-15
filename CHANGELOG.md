@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.26 (2026-10-15)
+
+- Inline formatting inside the texts of a template: `**bold**`, `*italic*`, `__underline__`, `{c:#hex}…{/c}` and
+  `{c:accent}…{/c}`, plain text in the variable's value, converted at render time by the runtime every template's html now
+  carries (`GET templates.php?runtime=1` → `inline_marks`, `rich_script`). Marks count toward `max_chars`; never in caption.
+
 ## 1.6.25 (2026-10-15)
 
 - One brand, two languages, made once: the standing pattern (link the projects once in Projects; work in one project; the
