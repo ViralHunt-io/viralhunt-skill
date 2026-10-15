@@ -84,6 +84,9 @@ this instead of listing endpoints:
    - two projects in two languages (`targets` shows each project's `lang`) with no `translates_to`
      between them → "Link the two brands in Projects ("Also publish translated in…") and every post
      I make on a template in one comes out in the other language too, image included"
+   - a brand with no keywords (`brand.php?action=status` → `keywords: 0`) → "Give me the product
+     names, ingredients and problems your buyers search for and I will watch X, Reddit, Quora and
+     the rest for your brand and tell you where a comment today reaches people"
    - everything set → "What performed best last month? I can find more like it"
 4. **One step per turn.** Do the step, show the result, propose the next. Never dump the whole
    workflow on someone who asked one question.
@@ -155,7 +158,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.26` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.27` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -872,6 +875,42 @@ article's licence before using it under a brand), `source_url`, `verified`.
   science day"; its `source_call` is this request with the recipe's categories and importance.
 - Sensitive dates (Hiroshima, the Holocaust, Chernobyl) are in the base because brands post about
   them; the tone is remembrance, never a hook. When in doubt, ask the user before scheduling.
+
+## 8d. Brand watch (the discussions to go and comment in)
+
+A project is a brand. Its **keywords** (product names, ingredients, the problems its buyers search
+for, `#hashtags`) are what the always-on extension searches on X, Quora, Pinterest, Instagram,
+TikTok and Facebook every few hours and the server searches on Reddit. The posts that match feed the
+radar's Brand filter and the **alerts**: a discussion that mentions a keyword and whose comments are
+climbing right now (by `min_delta` over the last `hours`, or born loud), reported once per brand to
+the owners and admins by email and push, and to you through `brand.php`.
+
+- `GET brand.php?action=status` → every brand: `keywords`, `category`, `webhook`, `alerts_7d`, and
+  per network `last_run`, `never_run`, `found`. A brand with `keywords: 0` is not watched: say so
+  and offer to set them. `never_run > 0` with an old `last_run` means the always-on machine is off:
+  tell the owner, do not invent results.
+- `GET brand.php?action=keywords&project_id=N` → the list with its networks and sweep state.
+  `POST brand.php {action: "keywords", project_id, keywords: ["argan oil", "#haircare"], networks?:
+  ["x","reddit","quora"], category?: "Hair care"}` (owner or admin token) replaces the list whole;
+  up to 40, and every keyword is machine time on every network, so only what the brand owns.
+- `GET brand.php?action=hot&project_id=N[&hours=8][&window=24][&networks=reddit,x]` → the threads
+  heating up right now, live: `title`, `url`, `author`, `comments_from` → `comments_to`, `delta`,
+  `hours`, `born_hot`, `alerted_at`. This is the answer to "where should I comment today": hand the
+  user the three with the biggest `delta`, with their links, and what a useful comment there would
+  say. Never post a comment yourself: the networks are the person's.
+- `GET brand.php?action=alerts&project_id=N[&since=ISO][&unread=1]` → what the brand was already told
+  about, newest first; `POST {action: "alerts_read", ids: [...]}` marks what you took. Poll every 10
+  to 30 minutes with `since` = your last read, or set a webhook.
+- **Webhook:** `POST brand.php {action: "webhook", project_id, url: "https://…"}` (owner or admin).
+  When the cron writes new alerts for that brand it POSTs them as JSON to the URL within the same
+  minute, with `X-VH-Signature: sha256=<hex HMAC-SHA256 of the raw body with the secret>` (the
+  secret comes back in the answer). Verify the signature, answer 2xx within 8 seconds; there is no
+  retry, what you missed is in `alerts`. `url: null` clears it.
+
+The standing job: every 15 minutes read `hot` (or receive the webhook), keep the threads with
+`delta` ≥ 10 the brand has not commented in, draft a useful comment for each (facts, the brand's
+tone, no link unless the thread asks for one) and leave it for the person: a board card or a message
+with the thread's link and the proposed comment. The person comments; you watched.
 
 ## 9. Content templates (make the image, don't just write the caption)
 

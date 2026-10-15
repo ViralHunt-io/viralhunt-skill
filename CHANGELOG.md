@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.27 (2026-10-15)
+
+- Section 8d, Brand watch: `GET /brand.php` (`status`, `keywords`, `hot`, `alerts`, `webhook`) and `POST` (`keywords`,
+  `alerts_read`, `webhook`). The brand's keywords, the discussions heating up right now with their links, the alerts
+  the brand was told about, and a signed webhook that tells the brand's own agent in the same minute. The onboarding
+  proposes keywords to a brand that has none.
+
 ## 1.6.26 (2026-10-15)
 
 - Inline formatting inside the texts of a template: `**bold**`, `*italic*`, `__underline__`, `{c:#hex}…{/c}` and
