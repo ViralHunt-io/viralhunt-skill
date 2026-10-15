@@ -152,7 +152,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.23` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.24` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -360,7 +360,8 @@ time, and get a yes before sending it (see Safety rules).
   "first_comment": "Link in comments 👇",  // optional; posted as the first comment
   "author_notes": "Source: https://doi.org/10.1038/… (the paper). Picture: our own render.",  // for the reviewer, NEVER published: the source link goes here, not in body (a link in the body cuts the reach)
   "kind": "fact",                              // what the post IS: fact | meme | quote | opinion | promo. The reviewer applies only that kind's rules; a post from a card takes the card's category when you omit it
-  "draft": true,                          // save it in Drafts instead of sending (see 5b)
+  "draft": true,                          // save it in Drafts instead of sending (see 5b); "stage": "draft" | "review" says the same in one word
+  "assigned_to": 7,                       // the member who takes it over (an id from members.php): their board card, their notification
   "overrides": {                              // per network or per account_id: only what THAT account needs to differ
     "bluesky": {"body": "the 300-character version", "thread": [{"body": "part 2"}, {"body": "part 3"}]},   // a thread: X and Threads natively, Bluesky and Mastodon as a reply chain
     "12": {"media": ["https://…/other-picture.jpg"], "first_comment": "this account's own first comment"}
@@ -457,7 +458,21 @@ story and it is true, leave it as a complete draft and tell the person: the team
   upload the media again, or pass a `design`, before `submit`), `design`
   (when the picture is a filled template), `lang`, `translated_from_id` and
   `review {score, verdict, reviewed_at, entries[]}`.
-- `GET schedule.php?action=get&id=N` on a draft with a `design` also returns `render {html, css,
+- **A text over a network's limit is refused, with the numbers.** A complete post (Review) or a
+  direct send whose body (or an account's override) passes X 280, Bluesky 300, Threads 500… answers
+  `422 text_too_long` with `details.blockers[]` (network, account, length, limit, over). Send that
+  account's short copy in `overrides` in the same call, drop the account, or send `draft: true` and
+  finish it with `update`. (Until 2026-10-14 this was a 500 with an empty body.)
+- **Assign the post to a person**: `assigned_to` (a member id from `members.php`; agents count) on
+  `create` or `update`. The post's board card is assigned to them, they get the notification and see
+  it in `my-cards.php`; `null` unassigns. `drafts&assigned_to=N` lists one member's posts; every
+  row and `get` carry `assigned_to` and `assigned_to_name`. A trusted reviewer may assign on
+  someone else's post.
+- `GET schedule.php?action=get&id=N` answers **the same shape as a drafts row** whatever the status:
+  `stage`, `targets`, `media`, `overrides` (what each account really sends: read it before an OK),
+  `thread`, `design`, `card_id`, `kind`, `author_notes`, `lang`, `assigned_to`, `review {score, verdict,
+  entries[]}`, `content_hash`, `needs_review`, plus `events[]` and `support_text`. On a draft or a
+  post in review with a `design` it also returns `render {html, css,
   format}`: the final card, static layers and fixed slots already baked in, variables substituted.
   Render it (section 9, step 5) and store the PNG with `update {id, png: "data:image/png;base64,…"}`;
   it becomes the post's first picture. When you cannot render, leave it: the Drafts page renders
@@ -474,9 +489,11 @@ story and it is true, leave it as a complete draft and tell the person: the team
   `overrides_replace: true` replaces the whole map. (Before 2026-10-09 it was replaced whole, which is how one
   agent's Threads copy erased a person's Bluesky copy.)
 - `POST schedule.php?action=update` with `{id, body?, media?, overrides?, scheduled_at?,
-  target_account_ids?|networks?, first_comment?, design?, png?}` edits a draft in place (no
-  confirmation needed: nothing is sent). Every field a person changes afterwards is logged
-  (`edit_log`, below), so keep your edits deliberate.
+  target_account_ids?|networks?, first_comment?, design?, png?, assigned_to?}` edits a draft or a
+  post in review in place (no confirmation needed: nothing is sent). The answer carries the `stage`
+  read back after the edit: an edit never moves a post out of Review by itself (only a `fix`
+  verdict does, and that `review` answer says `returned: true`). Every field a person changes
+  afterwards is logged (`edit_log`, below), so keep your edits deliberate.
 - `POST schedule.php?action=submit` with `{id, now?: true, scheduled_at?: ISO UTC}` moves a draft to
   Review once it is complete (a body or media, and at least one account). `now` clears the time
   (it goes out when authorized), `scheduled_at` sets one, neither keeps the draft's own.
@@ -494,7 +511,8 @@ story and it is true, leave it as a complete draft and tell the person: the team
 - `POST schedule.php?action=approve` with `{id}` sends it (owner/admin token only, and never
   without the user's yes). A draft whose last verdict is `block` cannot be approved until it is
   fixed and reviewed again.
-- `POST schedule.php?action=cancel` with `{id}` drops a draft.
+- `POST schedule.php?action=cancel` with `{id}` drops a draft or a post in review. There is no
+  `delete`: this is it (an unknown action answers 400 with the list of actions).
 
 **Reviewing as the team's checker** is its own section (5c): the policy comes from `policy.php`, the
 queue from `drafts&needs_review=1`, and the server decides what an OK may do.
@@ -743,7 +761,8 @@ Posts can be edited ONLY while their status is `scheduled` (not yet publishing),
 won't allow an edit less than ~5 minutes before publish time.
 
 - **Cancel:** `POST schedule.php?action=cancel` — `{"id": 123}`. Cancels the not-yet-published
-  targets. If everything already published you get `409 already_published`.
+  targets (and drops a draft or a post in review). It is the only removal: there is no `delete`.
+  If everything already published you get `409 already_published`.
 - **Update:** `POST schedule.php?action=update` — `{"id": 123, "body": "...", "media": ["..."],
   "networks": ["facebook"], "scheduled_at": "2026-08-01T15:30:00Z"}`. Only the fields you send
   change. The project cannot be changed.
@@ -895,6 +914,9 @@ template with no `instructions` is used as its `description` says.
    `w`×`h`: load the html+css, **wait for `[data-vh-ready="1"]`** (the template sets it once its
    fonts and images have loaded and the headline has auto-shrunk), then screenshot the
    `.vh-card` element. Screenshotting earlier gives you a blank or badly-typeset card.
+   **To see a template before any post:** `GET templates.php?slug=…&preview=1` returns
+   `preview.document`, a complete page with the example values filled (your own with
+   `&variables={"text":"…"}`, another size with `&format=story`): open it or render it.
 6. Upload the PNG (`POST schedule.php?action=upload`) and pass the returned URL in `media` on
    `schedule.php?action=create`.
 
@@ -922,7 +944,14 @@ Two rules the API enforces, so design for them:
   `data:font/…` / `data:image/…` are accepted too.
 - **A template is html, css and images, never code.** Scripts, iframes, forms, `on*=` handlers,
   `javascript:` URLs and stylesheets from anywhere but Google Fonts are REMOVED before it is
-  stored; the answer lists them in `removed`. Don't put them in: the app injects its own runtime.
+  stored; the answer lists them in `removed`. Don't put them in: the platform's runtime does the
+  work. **Coloured words and a headline that fits:** put `data-highlight="{{highlight}}"` on the
+  headline (the words listed in the variable, a contiguous phrase first, get `<span class="hl">`;
+  your css styles `.hl`), `data-fit="28"` on a block whose text must shrink to fit its box (or
+  `data-fit-lines="4"`), and `data-text="text"` on a block the app's editor may type into. The
+  platform appends its runtime when it stores the template (`runtime_added: true`;
+  `GET templates.php?runtime=1` shows the script and the attributes), and that runtime sets
+  `data-vh-ready="1"` for your renderer. The variable value stays plain words, never markup.
 
 Write the manifest as carefully as the layout: `description` is the instruction another
 agent (or you, later) will generate from, and `rules` are the hard constraints it must
@@ -1012,7 +1041,10 @@ in-progress column → comment progress → move to the `is_done` column. Full d
 | 403 | `insufficient_scope` | the token's permission group (reader, writer, reviewer, publisher, full) lacks what this call needs (`details.required`); say which group would do and do not retry. `GET /account` shows the token's own group under `permissions` |
 | 409 | `not_approvable` | the draft is blocked by its last review, or is not a draft any more; re-read it |
 | 409 | `not_editable` / `already_published` | the post is publishing or published; re-fetch and tell the user |
-| 413 | `upload_too_large` | over the server's limit (`targets.upload_max_bytes`, `details.upload_max_bytes`): compress the file or host it at a public URL and pass it in `media` |
+| 413 | `upload_too_large` | over the server's limit (`targets.upload_max_bytes`, `details.upload_max_bytes`, `details.post_max_size`): compress the file or host it at a public URL and pass it in `media` |
+| 400 | `upload_not_parsed` | the body arrived under the limits but PHP parsed no file: cut short or slower than `max_input_time`; not the size. Retry once; if it repeats, pass a public URL in `media` |
+| 422 | `text_too_long` | the text passes a network's limit (`details.blockers[]`: network, account, length, limit, over): send that account's short copy in `overrides`, drop the account, or save a draft |
+| 503 | `assignment_unavailable` | `assigned_to` needs the board cards of posts; the server has not run that migration |
 | 422 | `no_project` | the `project_id` or `project` you passed is not in this organization |
 | 502 | `publish_failed` | every target refused; the message lists each network's reason |
 | 503 | `scheduler_unavailable` / `publishing_unavailable` | scheduling not enabled on this site |

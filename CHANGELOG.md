@@ -3,6 +3,22 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.24 (2026-10-14)
+
+- `create`: a complete post whose text passes a network's limit answers `422 text_too_long` with the blockers (it was a
+  500 with an empty body); `stage: draft|review` is accepted next to `draft: true`; `assigned_to` assigns the post (its
+  board card) to a member, who is notified. `update` takes `assigned_to` too and answers the `stage` read back after the
+  edit. `drafts&assigned_to=N` filters; rows carry `assigned_to` and `assigned_to_name`.
+- `get` answers the same shape as a drafts row (overrides, design and render, thread, review, card_id, kind, lang…), so a
+  reviewer reading one post sees what each network will publish.
+- `upload`: "nothing parsed" (`400 upload_not_parsed`, a cut or slow body) is told apart from "too large" (413).
+- `cancel` is the removal: an unknown action (such as `delete`) answers 400 with the list of actions.
+- Templates: `?slug=…&preview=1` returns a complete page with the example values (or yours) to see a template before any
+  post; `data-highlight`, `data-fit` and `data-text` get the platform's runtime appended on upload (`runtime_added`), so
+  coloured words and a fitting headline work without any script of the author's (`?runtime=1` shows it).
+- `translate`: no em dashes in the translated texts, and a short copy becomes the override of every network of the
+  target project whose limit the translated body passes (`shortened` in the answer).
+
 ## 1.6.23 (2026-10-14)
 
 - A post whose picture comes from a ViralHunt template ALWAYS carries `design` (slug, format, variables), with the
