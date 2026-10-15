@@ -81,6 +81,9 @@ this instead of listing endpoints:
      take its most viral posts, verify them, rewrite them for your brand, make the images and
      leave five drafts a day for you to approve"
    - drafts waiting → "You have N drafts waiting; want me to review them and flag anything risky?"
+   - two projects in two languages (`targets` shows each project's `lang`) with no `translates_to`
+     between them → "Link the two brands in Projects ("Also publish translated in…") and every post
+     I make on a template in one comes out in the other language too, image included"
    - everything set → "What performed best last month? I can find more like it"
 4. **One step per turn.** Do the step, show the result, propose the next. Never dump the whole
    workflow on someone who asked one question.
@@ -152,7 +155,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.24` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.25` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -565,6 +568,24 @@ preselected and whether the translation waits as a draft or goes out with the or
 - When you approve a draft, `translations: [{project_id, account_ids?, image?}]` on
   `action=approve` does the same in one call. Ask the user first when the link is not
   preselected (`auto: false`), and never create the same translation twice (the app refuses).
+- The translation respects the house style (no em dashes) and the target project's networks:
+  for every network whose limit the translated body passes (X 280, Bluesky 300, Threads 500) the
+  app writes a short copy as that network's override in the same call; the answer lists them in
+  `shortened` (network, limit, the full length, the short one) and `overrides`. Read them back
+  and say so to the user instead of trusting the length by eye.
+
+**One brand, two languages, made once.** This is the standing pattern for a brand that runs a
+project per language (Cerebro Digital ES and EN): the owner links them once in Projects ("Also
+publish translated in…", target language, preselected, draft or send). From then on you work in
+ONE project only: verify the story, make the image on a template (`design`, section 9), leave the
+complete post in Review. When it is approved, `translations` on `approve` (or `translate` right
+after you leave the draft, when the user wants both ready for review at once) produces the other
+language: the copy, the first comment, the thread, the per-network copies and the TEXT of the
+image are adapted, the template re-renders with the translated words, the highlight stays inside
+the translated headline, and the picture is the same. Never write the second language yourself
+and never make two posts by hand: one post, one translation, both from the same template, so a
+fix in the image is made once. Tell the user the translation waits in the other project's Review
+(or went out with the original when the link says send).
 
 **Learn from the edits.** `GET schedule.php?action=edit_log&since=<ISO>` returns every change a
 person made to drafts after you left them: field, before, after, who. Read it at the start of
@@ -942,6 +963,10 @@ Two rules the API enforces, so design for them:
 - `html` and `css` are capped at 256KB each. Reference images and fonts by URL — the
   `fonts` array is how a font travels with the template. Fonts and pictures embedded as
   `data:font/…` / `data:image/…` are accepted too.
+- **Design for two languages.** When the brand publishes in two languages, the same template
+  renders both: give the headline room to grow (Spanish runs 15 to 20% longer than English) and
+  use `data-fit` on it so a longer translation shrinks instead of overflowing; keep the fixed
+  texts of the template (slots the owner locked) language-neutral or make one copy per language.
 - **A template is html, css and images, never code.** Scripts, iframes, forms, `on*=` handlers,
   `javascript:` URLs and stylesheets from anywhere but Google Fonts are REMOVED before it is
   stored; the answer lists them in `removed`. Don't put them in: the platform's runtime does the

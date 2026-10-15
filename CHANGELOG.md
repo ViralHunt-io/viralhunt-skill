@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.25 (2026-10-15)
+
+- One brand, two languages, made once: the standing pattern (link the projects once in Projects; work in one project; the
+  translation on approve or with `translate` adapts the copy and the text of the image and re-renders the same template),
+  the `shortened` overrides the translation writes for the networks that cut, the no-dashes house style, the onboarding
+  step that proposes the link when two projects have two languages, and how to design a template for two languages.
+
 ## 1.6.24 (2026-10-14)
 
 - `create`: a complete post whose text passes a network's limit answers `422 text_too_long` with the blockers (it was a
