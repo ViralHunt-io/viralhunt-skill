@@ -158,7 +158,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.27` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.28` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -893,6 +893,11 @@ the owners and admins by email and push, and to you through `brand.php`.
   `POST brand.php {action: "keywords", project_id, keywords: ["argan oil", "#haircare"], networks?:
   ["x","reddit","quora"], category?: "Hair care"}` (owner or admin token) replaces the list whole;
   up to 40, and every keyword is machine time on every network, so only what the brand owns.
+- `POST brand.php {action: "run", project_id}` (owner or admin token) = "search now": every keyword
+  of the brand is marked asked, the always-on machine picks them up within five minutes and the
+  Reddit cron within 30. The answer and `status` carry `machine` (`extension_alive`,
+  `extension_last_job`, `reddit_last_run`): when the machine is not alive, say so to the user instead
+  of promising results; nothing runs on the server for the extension's networks.
 - `GET brand.php?action=hot&project_id=N[&hours=8][&window=24][&networks=reddit,x]` → the threads
   heating up right now, live: `title`, `url`, `author`, `comments_from` → `comments_to`, `delta`,
   `hours`, `born_hot`, `alerted_at`. This is the answer to "where should I comment today": hand the

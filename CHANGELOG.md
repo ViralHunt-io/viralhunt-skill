@@ -3,6 +3,11 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.28 (2026-10-15)
+
+- `brand.php` `POST {action: run}` ("search now" on a brand's keywords) and `machine` on `status` and `run`: whether the
+  always-on machine and the Reddit cron are alive, so an empty answer is explained instead of guessed.
+
 ## 1.6.27 (2026-10-15)
 
 - Section 8d, Brand watch: `GET /brand.php` (`status`, `keywords`, `hot`, `alerts`, `webhook`) and `POST` (`keywords`,
