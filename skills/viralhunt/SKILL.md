@@ -158,7 +158,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.28` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.29` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -469,6 +469,15 @@ story and it is true, leave it as a complete draft and tell the person: the team
   `422 text_too_long` with `details.blockers[]` (network, account, length, limit, over). Send that
   account's short copy in `overrides` in the same call, drop the account, or send `draft: true` and
   finish it with `update`. (Until 2026-10-14 this was a 500 with an empty body.)
+- **Judge what each account publishes, not `body`.** Every drafts row carries `publishes[]`: per
+  account, the `text` that really goes out (the override's body when the account has one, else the
+  post's), `chars` against the network's `limit`, `over`, the first comment state and the media. A
+  reviewer that reads `body` keeps flagging an error the author already fixed in the override
+  (Hipatia, 2026-10-18); read `publishes[].text`.
+- `POST schedule.php?action=retry` with `{id, account_id}` (owner, admin or the author) sends the
+  post again to ONE network whose `results[account_id].status` is `failed`, with the same fits;
+  anything else answers `409 not_retriable`. A post whose `error_message` says the send was
+  interrupted may be live on the networks: check them (or `sync`, then `get`) before any resend.
 - **Assign the post to a person**: `assigned_to` (a member id from `members.php`; agents count) on
   `create` or `update`. The post's board card is assigned to them, they get the notification and see
   it in `my-cards.php`; `null` unassigns. `drafts&assigned_to=N` lists one member's posts; every
@@ -1086,11 +1095,18 @@ board is how a team curates before anything goes out.
 - `POST cards.php` — create a card. JSON body: `title` (required unless `post_url` is given;
   title, description and image are then filled from the URL's metadata), `post_url`,
   `description`, `priority` (`low|medium|high|urgent`), `due_date` (YYYY-MM-DD),
-  `assigned_to_user_id`, `category_id`, `card_type` (Post, Note, Article, Video…),
-  `board_column_id` (default: the default column), `image_url`, `platform`, `notes`.
-  Assigning a card notifies the person (push + email).
+  `assigned_to` (a member id, the member's name as the Team page shows it, or their email;
+  `assigned_to_user_id` and `assignee` mean the same), `category_id`, `card_type` (Post, Note,
+  Article, Video…), `board_column_id` (default: the default column), `image_url`, `platform`,
+  `notes`. Assigning a card notifies the person (push + email). The answer carries
+  `assigned_to_user_id` and `assigned_to_name` read back from the card: trust those, not the 201.
+  An unknown field answers 422 instead of being ignored.
 - `POST cards.php` with `{"action":"move","card_id":N,"board_column_id":M}` — move it. Moving
   into the `is_done` column is what completes a card; a comment saying "done" does not.
+- `POST cards.php` with `{"action":"assign","card_id":N,"assigned_to":"Erick"}` — hand the card
+  to a member (id, name or email; `null` unassigns). `GET cards.php?card_id=N` reads one card;
+  `GET cards.php?action=list[&board_column_id][&assigned_to][&unassigned=1]` lists them;
+  `{"action":"archive","card_id":N}` takes it off the board (nothing is ever deleted).
 - `GET my-cards.php[?status=pending|in_progress|completed]` — the cards assigned to the
   token's member. When the token belongs to an agent member, this is your workload.
 - `GET comments.php?card_id=N` / `POST comments.php` `{"card_id":N,"comment":"…"}` — read or

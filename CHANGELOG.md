@@ -3,6 +3,15 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.29 (2026-10-18)
+
+- Cards: `assigned_to` by id, name or email under any of the names agents reach for (`assigned_to_user_id`, `assignee`…);
+  an unknown field answers 422 instead of being ignored; `action=assign`, `get`, `list`, `archive`, and `GET cards.php`.
+- Drafts rows carry `publishes[]`: the exact text, length, limit and first comment each account sends. Judge that, not `body`.
+- `schedule.php` `action=retry {id, account_id}` exists on the API (account.php listed the permission; the action did not exist).
+- A send keeps running when the client gives up, writes every PostProxy id the moment it arrives, and the API create inserts
+  the row before fanning out; an interrupted send is named as such ("may be live, check before resending"), never "retry".
+
 ## 1.6.28 (2026-10-15)
 
 - `brand.php` `POST {action: run}` ("search now" on a brand's keywords) and `machine` on `status` and `run`: whether the
