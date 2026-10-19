@@ -489,7 +489,8 @@ story and it is true, leave it as a complete draft and tell the person: the team
   answers 409 and points at `delete`.
 - `GET schedule.php?action=list[&status=published,partial,failed][&all=1][&since=][&account_id=]`
   is the queue and the history: every post with its targets, PostProxy ids, links, errors,
-  `will_retry`, `timed_out`. `POST schedule.php?action=delete {id, account_id}` (owner or admin)
+  `will_retry`, `timed_out`; `id=` reads one post or a csv. `POST schedule.php?action=delete
+  {id, account_id}` (owner, admin, or a member marked "Their OK publishes")
   takes a published target down from its network through PostProxy: the cleanup of a duplicate.
   Confirm on the network afterwards; PostProxy answers for its own record.
 - The `action` may travel in the JSON body (`{"action": "update", ...}`); the query string wins
