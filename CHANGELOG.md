@@ -3,6 +3,15 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.30 (2026-10-19)
+
+- A timed-out create is never resent by itself: `timed_out: true` on the target, the sync looks the post up on PostProxy and
+  adopts it, `retry` needs `force: true` on it, `cancel {id, account_id}` stops it. Post 1136 had four Facebook copies.
+- `cancel {id, account_id}` stops one network; `GET list` is the queue and the history with every target's state and link;
+  `POST delete {id, account_id}` (owner, admin) takes a published target down through PostProxy.
+- `action` in the JSON body is read; Bluesky first comments and threads are reported unsupported (405) instead of retried;
+  a member marked "Their OK publishes" may `approve` someone else's post.
+
 ## 1.6.29 (2026-10-18)
 
 - Cards: `assigned_to` by id, name or email under any of the names agents reach for (`assigned_to_user_id`, `assignee`…);

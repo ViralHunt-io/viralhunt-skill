@@ -158,7 +158,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.29` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.30` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -478,6 +478,23 @@ story and it is true, leave it as a complete draft and tell the person: the team
   post again to ONE network whose `results[account_id].status` is `failed`, with the same fits;
   anything else answers `409 not_retriable`. A post whose `error_message` says the send was
   interrupted may be live on the networks: check them (or `sync`, then `get`) before any resend.
+- **A timed-out create is not a failure.** A target with `timed_out: true` and no PostProxy id
+  means our side stopped waiting while PostProxy kept working: the post MAY be live. It is never
+  resent by itself; the sync asks PostProxy for it (three checks, two minutes apart) and adopts
+  it when it is there (`reconciled: true`). `retry` on such a target answers `409 maybe_live`
+  unless you send `force: true` after checking the network yourself. To stop it instead:
+  `cancel {id, account_id}`.
+- `POST schedule.php?action=cancel` with `{id, account_id}` stops ONE network: a pending
+  automatic retry is halted, a not-yet-published PostProxy post is canceled; a published one
+  answers 409 and points at `delete`.
+- `GET schedule.php?action=list[&status=published,partial,failed][&all=1][&since=][&account_id=]`
+  is the queue and the history: every post with its targets, PostProxy ids, links, errors,
+  `will_retry`, `timed_out`. `POST schedule.php?action=delete {id, account_id}` (owner or admin)
+  takes a published target down from its network through PostProxy: the cleanup of a duplicate.
+  Confirm on the network afterwards; PostProxy answers for its own record.
+- The `action` may travel in the JSON body (`{"action": "update", ...}`); the query string wins
+  when both are present. Bluesky takes no first comment or thread through PostProxy: the result
+  says `followups_unsupported` and nothing is attempted; put the link in the body there.
 - **Assign the post to a person**: `assigned_to` (a member id from `members.php`; agents count) on
   `create` or `update`. The post's board card is assigned to them, they get the notification and see
   it in `my-cards.php`; `null` unassigns. `drafts&assigned_to=N` lists one member's posts; every
