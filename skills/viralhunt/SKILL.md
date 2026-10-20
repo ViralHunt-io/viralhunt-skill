@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.34"
+  version: "1.6.35"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.34` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.35` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -500,6 +500,18 @@ This is how a team works with an agent on ViralHunt. Follow it unless the person
 5. **When the API does not answer as you expect,** one message with the exact call and the exact
    answer, for the person to pass to the developers. No workarounds, no sorting or filtering by hand
    on the assumption that a parameter is ignored: an unknown value is a 422 that names the valid ones.
+6. **Read the brand's voice first.** `GET schedule.php?action=targets` returns `projects[].voice`: what the
+   owner wrote about how that brand speaks (audience, tone, the hooks that work, how a post is built,
+   per-network versions, what it never says, how claims are verified). Read it at the start of every
+   job for that project and follow it over the general rules in this file; when it is empty, say so once
+   and offer to draft one from the brand's best published posts (`stats`), for the owner to paste on the
+   Projects page. Never write a voice into a project yourself.
+7. **Complete means every network's copy is written.** For every target whose text limit the body
+   exceeds (X 280, Bluesky 300, Threads 500: `targets.accounts[].text_limit`), write that account's own
+   copy in `overrides[account_id].body` in the same `create`: a real short version with its own hook and
+   the one fact that matters, never the body cut at the limit, and the source or the long read in that
+   account's `first_comment` where the network takes one. The person opens the draft to humanize, not to
+   write the X version.
 
 ## 5b. Drafts and Review (the two stages before sending)
 

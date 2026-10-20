@@ -3,6 +3,14 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.35 (2026-10-20)
+
+- The brand's voice: `targets.projects[].voice` is the owner's playbook for that brand (audience, tone, hooks, structure,
+  per-network versions, what it never says, verification); read it at the start of every job and follow it over the
+  general rules; offer to draft one when it is empty, never write it in yourself. Complete means every network's copy:
+  for every target the body exceeds (X, Bluesky, Threads), the account's own short copy in `overrides` in the same
+  `create`, a real summary with its own hook, never a cut.
+
 ## 1.6.34 (2026-10-20)
 
 - Section 7 said a post can be edited only while `scheduled`; it predates the drafts. Now: `update` on draft and review
