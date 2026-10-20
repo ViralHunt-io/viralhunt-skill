@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.31 (2026-10-19)
+
+- `create`, `drafts` rows and `get` carry `url` (the post's detail, `/schedule/?post=N`, opens from any project),
+  `drafts_url` (the Drafts page scoped to the post's project), `project_id` and `project_name`; the old `review_url`
+  pointed at a route that did not exist. The hand-over rule: id, project name, stage and `url`, one short message per post.
+- `trending.php` answers `422 unknown_sort` with the valid sorts of the source instead of falling silently to the default.
+
 ## 1.6.30 (2026-10-19)
 
 - A timed-out create is never resent by itself: `timed_out: true` on the target, the sync looks the post up on PostProxy and

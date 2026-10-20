@@ -158,7 +158,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.30` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.31` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -455,7 +455,14 @@ Your `create` without `draft: true` lands straight in Review (the post is comple
 (`card_id` in the answer; pass your own `card_id` to use an existing card): a collaborator opens it,
 changes the picture, adds another one or fixes the text, and the card moves by itself to the
 board's Drafts → In review → Scheduled → Published columns as the post moves. So when you verified a
-story and it is true, leave it as a complete draft and tell the person: the team finishes it there. When the server has not migrated the review stage yet
+story and it is true, leave it as a complete draft and tell the person: the team finishes it there.
+**How to hand a post over** (one short message per post): the id, the project name (`project_name` in
+the answer), the stage, and the `url` the answer gives (`/schedule/?post=N` opens the post's detail
+from any project; `drafts_url` is the Drafts page on that project). Never compose a link yourself.
+The Drafts page shows ONE project at a time (the active one, or "all" from its selector); there is
+no author filter, so a post the person cannot see is in another project, not hidden from them.
+A draft left unfinished for a week loses its files by design (`media_removed: true`), which is
+retention, not a failure of whoever made it. When the server has not migrated the review stage yet
 (`review_stage_ready: false` on `targets`), everything is a `draft` and the person approves from there.
 
 - `GET schedule.php?action=drafts` (add `&all=1` for every project, `&stage=draft|review` for one
