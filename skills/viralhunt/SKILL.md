@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.33"
+  version: "1.6.34"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -138,7 +138,7 @@ copy-paste prompts; point people there when they want to read instead of chat.
 | Action | Member or agent token | Member ticked "Their OK publishes" | Member ticked "Publishes own posts after the grade" | Admin | Owner |
 |---|---|---|---|---|---|
 | Create a draft, update own posts, submit to Review, review, assign a card | yes | yes | yes | yes | yes |
-| Edit someone else's post | no (only `overrides`, `kind`, `design_fields` when ticked) | overrides, kind, design_fields | no | yes | yes |
+| Edit someone else's post | no (only `overrides`, `kind`, `design_fields` when ticked) | overrides, kind, design_fields (`png` only together with design_fields) | no | yes | yes |
 | Approve (publish) someone else's post | no | yes (never one you wrote or submitted) | no | yes | yes |
 | Publish your own graded post | no | no | yes (verdict ok or fix on the current content) | yes | yes |
 | Retry one network | author only | author only | author only | yes | yes |
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.33` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.34` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -868,10 +868,19 @@ template): add the form field `purpose=brand`. PNG, JPG or WebP only, up to 2 MB
 URL that comes back is the only kind the design editor accepts for images. A bigger video (the app itself takes up to 512 MB in chunks) must already live at a public
 https URL: pass that URL in `media` and the publishing service fetches it.
 
-## 7. Edit or cancel a scheduled post
+## 7. Edit or cancel a post
 
-Posts can be edited ONLY while their status is `scheduled` (not yet publishing), and PostProxy
-won't allow an edit less than ~5 minutes before publish time.
+`update` works on a post in three states, and does three different things:
+- **`draft` or `review`**: the row changes in place, nothing is told to PostProxy (sections 5a and
+  5b). The author, an owner or an admin may change anything (`body`, `media`, `targets`, `scheduled_at`,
+  `first_comment`, `author_notes`, `kind`, `overrides`, `design`, `assigned_to`); a reviewer ticked
+  "Their OK publishes" may change only `overrides`, `kind` and `design_fields` (+ `png`, only together
+  with `design_fields`) on someone else's post. Editing a post in Review keeps it in Review and makes
+  the last verdict stale.
+- **`scheduled`** (accepted by PostProxy, not yet publishing): the change goes to PostProxy too, and
+  PostProxy refuses an edit less than ~5 minutes before publish time (`409`).
+- **`processing`, `published`, `partial`, `failed`, `canceled`**: no edit. Use `retry {id, account_id}`
+  for a failed network, `delete {id, account_id}` to take a published target down, or a new post.
 
 - **Cancel:** `POST schedule.php?action=cancel` — `{"id": 123}`. Cancels the not-yet-published
   targets (and drops a draft or a post in review). It is the only removal: there is no `delete`.
@@ -881,7 +890,8 @@ won't allow an edit less than ~5 minutes before publish time.
   change. The project cannot be changed.
 
 Agent rules:
-- Before editing, `GET schedule.php?action=get&id=123` and confirm status is `scheduled`.
+- Before editing, `GET schedule.php?action=get&id=123` and read `status` (or `stage`): draft, review
+  and scheduled take an update; anything else does not.
 - On `409` (already publishing/published or too close to publish time), re-fetch and tell the
   user — never retry an update blindly.
 - After any edit, `GET` again and confirm the change landed before reporting done.

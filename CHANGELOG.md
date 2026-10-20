@@ -3,6 +3,11 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.34 (2026-10-20)
+
+- Section 7 said a post can be edited only while `scheduled`; it predates the drafts. Now: `update` on draft and review
+  changes the row (nothing sent), on scheduled it reaches PostProxy, on anything later it is refused. Found by the reviewer agent.
+
 ## 1.6.33 (2026-10-20)
 
 - Section 0a: who may do what, by role and tick, so an agent promises only what it can do.
