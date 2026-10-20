@@ -158,7 +158,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.31` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.32` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -442,6 +442,31 @@ after it went out (the live post on the network is the record; the queue keeps a
 the files of a draft nobody finished go after 7 days. Never reuse a media URL from an old post:
 upload again (section 6) or pass a `design`.
 
+## 5a. The working agreement: how you hand a post over
+
+This is how a team works with an agent on ViralHunt. Follow it unless the person says otherwise.
+
+1. **Every post the person asks for goes to Drafts, complete.** `create` with `draft: true`, in the
+   project they named, with the text, the image, the accounts and a tentative time. Without an image
+   it is not complete: when no picture with rights exists, render the organization's template with
+   text only (section 9) and say in `author_notes` that asking the subject for their photo is an
+   option. Do not ask the person to choose between two paths; take the template path and note the other.
+2. **Do not send it to Review unless asked.** The person opens the draft, changes what they want and
+   schedules it. `submit` only when they tell you to.
+3. **Hand it over in ONE short message, five lines:** the post id and the project name
+   (`project_name` in the answer); the `url` the answer gives (`/schedule/?post=N`, it opens the post
+   from any project; never compose a link yourself); one line with the angle of the copy; one line with
+   what you verified and the source; one line with the decision you need from them, if any.
+   Everything else (full sources, doubts, data you left out and why) goes in `author_notes` of the
+   post, not in the chat.
+4. **Two things that are not bugs.** The Drafts page shows ONE project at a time (the active one, or
+   "all" from its selector) and has no author filter: a post the person cannot see is in another
+   project, which is why you always name the project. A draft left unfinished for a week loses its
+   files by design (`media_removed: true`): retention, not a failure of whoever made it; do not audit them.
+5. **When the API does not answer as you expect,** one message with the exact call and the exact
+   answer, for the person to pass to the developers. No workarounds, no sorting or filtering by hand
+   on the assumption that a parameter is ignored: an unknown value is a 422 that names the valid ones.
+
 ## 5b. Drafts and Review (the two stages before sending)
 
 Nothing in either stage has been sent.
@@ -455,14 +480,8 @@ Your `create` without `draft: true` lands straight in Review (the post is comple
 (`card_id` in the answer; pass your own `card_id` to use an existing card): a collaborator opens it,
 changes the picture, adds another one or fixes the text, and the card moves by itself to the
 board's Drafts → In review → Scheduled → Published columns as the post moves. So when you verified a
-story and it is true, leave it as a complete draft and tell the person: the team finishes it there.
-**How to hand a post over** (one short message per post): the id, the project name (`project_name` in
-the answer), the stage, and the `url` the answer gives (`/schedule/?post=N` opens the post's detail
-from any project; `drafts_url` is the Drafts page on that project). Never compose a link yourself.
-The Drafts page shows ONE project at a time (the active one, or "all" from its selector); there is
-no author filter, so a post the person cannot see is in another project, not hidden from them.
-A draft left unfinished for a week loses its files by design (`media_removed: true`), which is
-retention, not a failure of whoever made it. When the server has not migrated the review stage yet
+story and it is true, leave it as a complete draft and tell the person the way section 5a says: id,
+project name, `url`, angle, what you verified, the decision you need. When the server has not migrated the review stage yet
 (`review_stage_ready: false` on `targets`), everything is a `draft` and the person approves from there.
 
 - `GET schedule.php?action=drafts` (add `&all=1` for every project, `&stage=draft|review` for one
