@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.32"
+  version: "1.6.33"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -133,6 +133,26 @@ copy-paste prompts; point people there when they want to read instead of chat.
 - **Say what you did.** After a publish or schedule, report the post id, the accounts and the
   time back to the user, and after an edit, re-read the post and confirm the change landed.
 
+## 0a. Who may do what (promise only what the role allows)
+
+| Action | Member or agent token | Member ticked "Their OK publishes" | Member ticked "Publishes own posts after the grade" | Admin | Owner |
+|---|---|---|---|---|---|
+| Create a draft, update own posts, submit to Review, review, assign a card | yes | yes | yes | yes | yes |
+| Edit someone else's post | no (only `overrides`, `kind`, `design_fields` when ticked) | overrides, kind, design_fields | no | yes | yes |
+| Approve (publish) someone else's post | no | yes (never one you wrote or submitted) | no | yes | yes |
+| Publish your own graded post | no | no | yes (verdict ok or fix on the current content) | yes | yes |
+| Retry one network | author only | author only | author only | yes | yes |
+| Cancel a post or one network | author | author | author | yes | yes |
+| Delete a published target from its network | no | yes | no | yes | yes |
+| Create templates, edit the ones you created | with the "Creates templates" tick | with the tick | with the tick | yes | yes |
+| Assign templates to projects, connect accounts, Team settings | no | no | no | yes | owner |
+| Mint API tokens | no | no | no | for members, agents and self | yes |
+
+The token's permission group (reader, writer, reviewer, publisher, full) can only REMOVE rights
+from the row above; `GET account.php` shows it under `permissions`. The ticks live on the Team page
+and only the owner sets them. When a task needs a right you lack, say which tick or role would give
+it instead of trying a workaround.
+
 ## 0. First call: who is this key
 
 `GET account.php` → plan, what is left today, credits, and per-endpoint rules. Call it once at
@@ -158,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.32` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.33` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -195,6 +215,12 @@ means wait until the reset). All responses are JSON: `{"success":true,"data":{�
 
 - `source`: `tiktok` | `instagram` | `x` | `facebook` | `pinterest` | `bluesky` | `douyin` |
   `reddit` | `mastodon` | `tumblr` | `hackernews` | `rss`
+- **Read `metrics` on every row**: `{likes, comments, shares, views, saves, engagement}`, the same
+  names on every source (`null` where the network has no such number). The source's own columns are
+  there too and they differ (X: `likes`, `retweets`, `views`; TikTok: `likes_count`, `plays_count`;
+  Facebook: `reactions`; Reddit: `score`, `num_comments`; HN: `points`); reading `like_count` on X
+  shows zeros and the network looks empty. An unknown `sort` is a `422 unknown_sort` that lists the
+  valid ones; a sort is never ignored.
 - `sort`: `viral` (default), `engagement`, `newest`, `oldest`, plus per network: `most_liked`,
   `most_viewed`, `most_commented`, `most_retweeted`, `most_reposted`, `most_saved`,
   `most_upvoted` (reddit), `most_boosted` (mastodon), `most_noted` (tumblr), `most_points`
@@ -864,6 +890,13 @@ Agent rules:
 
 `GET schedule.php?action=get&id=<post_id>` → the post's current status and per-network
 results. Call `POST schedule.php?action=sync` first to refresh from the networks.
+**A timeout or a gateway 502/504 on a send does not mean "not published".** The write may have
+landed after the answer was lost (post 1136: four copies from three retries; 2026-10-20: five 502s
+whose posts all existed). The server marks such a target `timed_out: true`, never resends it by
+itself, looks it up on PostProxy and adopts it; every `retry` (yours, a person's, the sync's) looks
+first and adopts what it finds. So: never ask for a retry on a `timed_out` target; wait for `get`
+to show the id, or confirm on the network, then `retry {id, account_id, force: true}`. The create
+carries one `Idempotency-Key` per (post, account), the same on every automatic resend.
 The answer also carries `events[]`, the delivery log (every step the post took: created, accepted by
 PostProxy with its id, published with its link, refused with the network's reason, retried, stale,
 canceled, reviewed, approved; times in UTC), and `support_text`, the plain text to hand the user

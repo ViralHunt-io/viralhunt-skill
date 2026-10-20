@@ -3,6 +3,16 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.33 (2026-10-20)
+
+- Section 0a: who may do what, by role and tick, so an agent promises only what it can do.
+- Every trending row carries `metrics {likes, comments, shares, views, saves, engagement}` with the same names on every
+  source; an unknown `sort` is `422 unknown_sort`.
+- Section 8: a timeout or a gateway 502/504 is "maybe live", never resent by itself; every retry looks on PostProxy first;
+  one `Idempotency-Key` per (post, account), the same on every automatic resend.
+- A translation carries the per-account copies over by network (a source account's short copy becomes the target
+  network's override).
+
 ## 1.6.32 (2026-10-19)
 
 - Section 5a, the working agreement: every post goes to Drafts complete (text, image, accounts, tentative time, the project the
