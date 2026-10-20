@@ -442,31 +442,35 @@ after it went out (the live post on the network is the record; the queue keeps a
 the files of a draft nobody finished go after 7 days. Never reuse a media URL from an old post:
 upload again (section 6) or pass a `design`.
 
-## 5a. The working agreement: how you hand a post over
-
-This is how a team works with an agent on ViralHunt. Follow it unless the person says otherwise.
-
-1. **Every post the person asks for goes to Drafts, complete.** `create` with `draft: true`, in the
-   project they named, with the text, the image, the accounts and a tentative time. Without an image
-   it is not complete: when no picture with rights exists, render the organization's template with
-   text only (section 9) and say in `author_notes` that asking the subject for their photo is an
-   option. Do not ask the person to choose between two paths; take the template path and note the other.
-2. **Do not send it to Review unless asked.** The person opens the draft, changes what they want and
-   schedules it. `submit` only when they tell you to.
-3. **Hand it over in ONE short message, five lines:** the post id and the project name
-   (`project_name` in the answer); the `url` the answer gives (`/schedule/?post=N`, it opens the post
-   from any project; never compose a link yourself); one line with the angle of the copy; one line with
-   what you verified and the source; one line with the decision you need from them, if any.
-   Everything else (full sources, doubts, data you left out and why) goes in `author_notes` of the
-   post, not in the chat.
-4. **Two things that are not bugs.** The Drafts page shows ONE project at a time (the active one, or
-   "all" from its selector) and has no author filter: a post the person cannot see is in another
-   project, which is why you always name the project. A draft left unfinished for a week loses its
-   files by design (`media_removed: true`): retention, not a failure of whoever made it; do not audit them.
-5. **When the API does not answer as you expect,** one message with the exact call and the exact
-   answer, for the person to pass to the developers. No workarounds, no sorting or filtering by hand
-   on the assumption that a parameter is ignored: an unknown value is a 422 that names the valid ones.
-
+## 5a. The working agreement: how you hand a post over
+
+This is how a team works with an agent on ViralHunt. Follow it unless the person says otherwise.
+
+1. **Every post the person asks for goes to Drafts, complete.** `create` with `draft: true`, in the
+   project they named, with the text, the image, the accounts and a tentative time. Without an image
+   it is not complete: when no picture with rights exists, render the organization's template with
+   text only (section 9) and say in `author_notes` that asking the subject for their photo is an
+   option. Do not ask the person to choose between two paths; take the template path and note the other.
+   **A picture made on a template is complete only with its `design`** (template, format,
+   variables) in the post: the PNG you rendered alone is a flat file nobody can edit in the app (the
+   answer says `picture_editable: false`; `update {id, design}` repairs it). Pass both: the PNG in
+   `media` so it shows at once, the `design` so the person can fix a word or swap the photo.
+2. **Do not send it to Review unless asked.** The person opens the draft, changes what they want and
+   schedules it. `submit` only when they tell you to.
+3. **Hand it over in ONE short message, five lines:** the post id and the project name
+   (`project_name` in the answer); the `url` the answer gives (`/schedule/?post=N`, it opens the post
+   from any project; never compose a link yourself); one line with the angle of the copy; one line with
+   what you verified and the source; one line with the decision you need from them, if any.
+   Everything else (full sources, doubts, data you left out and why) goes in `author_notes` of the
+   post, not in the chat.
+4. **Two things that are not bugs.** The Drafts page shows ONE project at a time (the active one, or
+   "all" from its selector) and has no author filter: a post the person cannot see is in another
+   project, which is why you always name the project. A draft left unfinished for a week loses its
+   files by design (`media_removed: true`): retention, not a failure of whoever made it; do not audit them.
+5. **When the API does not answer as you expect,** one message with the exact call and the exact
+   answer, for the person to pass to the developers. No workarounds, no sorting or filtering by hand
+   on the assumption that a parameter is ignored: an unknown value is a 422 that names the valid ones.
+
 ## 5b. Drafts and Review (the two stages before sending)
 
 Nothing in either stage has been sent.

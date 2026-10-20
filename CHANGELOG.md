@@ -3,14 +3,15 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
-## 1.6.32 (2026-10-19)
-
-- Section 5a, the working agreement: every post goes to Drafts complete (text, image, accounts, tentative time, the project the
-  person named; no picture with rights = the template with text only), never to Review unless asked, handed over in one
-  five-line message (id and project, `url`, angle, verification and source, the decision needed) with everything else in
-  `author_notes`; the Drafts page shows one project at a time; `media_removed` after a week is retention; an API surprise is one
-  message with the call and the answer, never a workaround.
-
+## 1.6.32 (2026-10-19)
+
+- Section 5a, the working agreement: every post goes to Drafts complete (text, image, accounts, tentative time, the project the
+  person named; no picture with rights = the template with text only), never to Review unless asked, handed over in one
+  five-line message (id and project, `url`, angle, verification and source, the decision needed) with everything else in
+  `author_notes`; the Drafts page shows one project at a time; `media_removed` after a week is retention; an API surprise is one
+  message with the call and the answer, never a workaround. A picture made on a template is complete only with its `design`:
+  `create` answers `picture_editable` and a `picture_note` when the media is a flat file; `update {id, design}` repairs it.
+
 ## 1.6.31 (2026-10-19)
 
 - `create`, `drafts` rows and `get` carry `url` (the post's detail, `/schedule/?post=N`, opens from any project),
