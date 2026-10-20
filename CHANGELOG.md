@@ -11,6 +11,8 @@ the skill is updated in the same commit as the endpoint it describes.
   `author_notes`; the Drafts page shows one project at a time; `media_removed` after a week is retention; an API surprise is one
   message with the call and the answer, never a workaround. A picture made on a template is complete only with its `design`:
   `create` answers `picture_editable` and a `picture_note` when the media is a flat file; `update {id, design}` repairs it.
+  Every picture is made on one of the organization's templates, and when none fits the agent creates the template (the owner's
+  "Creates templates" tick); "say so in the review note" is gone.
 
 ## 1.6.31 (2026-10-19)
 

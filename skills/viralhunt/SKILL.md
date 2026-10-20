@@ -451,6 +451,10 @@ This is how a team works with an agent on ViralHunt. Follow it unless the person
    it is not complete: when no picture with rights exists, render the organization's template with
    text only (section 9) and say in `author_notes` that asking the subject for their photo is an
    option. Do not ask the person to choose between two paths; take the template path and note the other.
+   **Every picture is made on one of the organization's templates, and when none fits you create
+   the template** (section 9, Authoring; the owner ticks "Creates templates" for you on Team): that
+   is what lets the person fix a word or swap the photo by hand, or tell you which word to change
+   (`update {id, design_fields}`), instead of asking you to redo the image.
    **A picture made on a template is complete only with its `design`** (template, format,
    variables) in the post: the PNG you rendered alone is a flat file nobody can edit in the app (the
    answer says `picture_editable: false`; `update {id, design}` repairs it). Pass both: the PNG in
@@ -597,8 +601,10 @@ templates and leave everything in drafts so I evaluate them":
    before the library, the template's `instructions`). Fill only its `dynamic` variables, with
    the post's own picture as `image` and a headline of your own as `text`. Pass `design` always;
    render the PNG too (section 9, step 5) when you can, and let the app render it when you cannot.
-   When no template fits, say so in the review note; never ship the other page's picture as
-   the post's picture.
+   When no template fits, CREATE one (section 9, "Authoring your own templates": `POST
+   templates.php {action: create}`; it needs the owner's "Creates templates" tick on Team, ask for it
+   once) and use it from then on; never ship the other page's picture as the post's picture, and
+   never a PNG with no template behind it.
 5. `schedule.php?action=create` with the `design` (and the PNG in `media` when you rendered it), the copy in `body`,
    and `scheduled_at` spread over the days at the project's best hours (section 3), five a day
    unless told otherwise. As an agent token it lands in Review, complete and dated; pass
