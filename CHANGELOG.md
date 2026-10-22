@@ -3,6 +3,15 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.36 (2026-10-22)
+
+- One picture per post, always. A post made on a template has exactly one picture, the render of its design: `png` on
+  `update` now REPLACES whatever picture the post had (it used to be added next to the agent's own render, and posts went
+  out with two identical pictures when a person approved). Never put a second picture in `media` next to a design, and never
+  upload your own render AND pass `png`. Several pictures on a plain post are a carousel the user has to have asked for:
+  pass `carousel: true` with the list, else `create`/`update` answer `422 multiple_pictures`, and the approval refuses a
+  template post that carries two. `design_fields` without `png` now drops every picture (yours too), not only the app's render.
+
 ## 1.6.35 (2026-10-20)
 
 - The brand's voice: `targets.projects[].voice` is the owner's playbook for that brand (audience, tone, hooks, structure,
