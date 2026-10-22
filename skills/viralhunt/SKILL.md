@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.35"
+  version: "1.6.36"
   updated: "2026-10-12"
   api_docs: https://viralhunt.io/api
 ---
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.35` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.36` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -580,8 +580,16 @@ project name, `url`, angle, what you verified, the decision you need. When the s
   post in review with a `design` it also returns `render {html, css,
   format}`: the final card, static layers and fixed slots already baked in, variables substituted.
   Render it (section 9, step 5) and store the PNG with `update {id, png: "data:image/png;base64,…"}`;
-  it becomes the post's first picture. When you cannot render, leave it: the Drafts page renders
-  it when a person approves.
+  it becomes the post's ONE picture (it replaces whatever picture the post had). When you cannot
+  render, leave it: the Drafts page renders it when a person approves.
+- **One picture per post, always.** A post made on a template has exactly one picture: the render
+  of its design. Never put a second picture in `media` next to it, and never upload your own render
+  AND pass `png`: either `media: [your render]` + `design`, or `design` alone with `media: []` and
+  the app renders it at approval. Several pictures on a plain post are a carousel, which the user
+  has to have asked for: pass `carousel: true` with the list, else `create`/`update` answer
+  `422 multiple_pictures` and the approval refuses a template post with two pictures. (Posts 1250
+  and 1251, 2026-10-22: the approval's render was ADDED next to the agent's render and both went
+  out; the app replaces now, and this rule is the lock.)
 - `first_comment` inside an override has THREE states: key absent = the account inherits the post's
   first comment; `""` = this account posts no first comment at all; text = its own. To remove a comment
   from one account send `"first_comment": ""`, never drop the key (dropping it means inherit, and the
