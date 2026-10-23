@@ -18,8 +18,8 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.37"
-  updated: "2026-10-12"
+  version: "1.6.38"
+  updated: "2026-10-23"
   api_docs: https://viralhunt.io/api
 ---
 
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.37` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.38` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -1027,10 +1027,17 @@ the owners and admins by email and push, and to you through `brand.php`.
   `extension_last_job`, `reddit_last_run`): when the machine is not alive, say so to the user instead
   of promising results; nothing runs on the server for the extension's networks.
 - `GET brand.php?action=hot&project_id=N[&hours=8][&window=24][&networks=reddit,x]` → the threads
-  heating up right now, live: `title`, `url`, `author`, `comments_from` → `comments_to`, `delta`,
-  `hours`, `born_hot`, `alerted_at`. This is the answer to "where should I comment today": hand the
-  user the three with the biggest `delta`, with their links, and what a useful comment there would
-  say. Never post a comment yourself: the networks are the person's.
+  heating up right now, live: `title`, `url`, `author`, `comments`, `comments_from` → `comments_to`,
+  `delta`, `hours`, `born_hot`, `rising`, `alerted_at`. This is the answer to "where should I comment
+  today": hand the user the three with the biggest `delta`, with their links, and what a useful
+  comment there would say. Never post a comment yourself: the networks are the person's.
+  `&all=1` adds what is most commented even when it is not climbing (`rising: false`, `delta` null =
+  one reading only), rising first: the same list the app's dashboard shows. When `hot` comes back
+  empty, read `machine` in the answer before concluding nothing is being said: `extension_alive:
+  false` means no Chrome with the poll on reported in the last 15 minutes (`poll_on: false` = a
+  Chrome is open but attends nothing), so only Reddit is being searched; say that to the owner.
+  The owners and admins also get a daily digest email at 8:00 (the project's timezone) with the
+  most commented threads of the day, and an alert the moment a thread climbs.
 - `GET brand.php?action=alerts&project_id=N[&since=ISO][&unread=1]` → what the brand was already told
   about, newest first; `POST {action: "alerts_read", ids: [...]}` marks what you took. Poll every 10
   to 30 minutes with `since` = your last read, or set a webhook.

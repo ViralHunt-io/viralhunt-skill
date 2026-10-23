@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.38 (2026-10-23)
+
+- Brand watch: `brand.php?action=hot&all=1` returns every matching post of the window, the rising ones first and then the most
+  commented (`comments`, `rising`, `delta` null when one reading only), the list the app's dashboard shows. `hot` and `status` carry
+  `machine` with the always-on Chrome's heartbeat (`extension_alive`, `poll_on`, `heartbeat_minutes_ago`, `machines[]`): read it
+  before concluding nothing is being said about a brand. Owners and admins get a daily digest of the most commented threads per brand.
+
 ## 1.6.37 (2026-10-22)
 
 - The carousel mark is stored: `carousel: true` on `create`/`update` is kept on the post and returned as `carousel` on every
