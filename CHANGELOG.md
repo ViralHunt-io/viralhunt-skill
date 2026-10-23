@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.37 (2026-10-22)
+
+- The carousel mark is stored: `carousel: true` on `create`/`update` is kept on the post and returned as `carousel` on every
+  drafts row and on `get`. Every send (the app's too) refuses a second picture on a post without the mark, and `carousel: false`
+  on a post that holds several pictures is refused until the extra ones leave. The same URL twice in `media` counts once.
+
 ## 1.6.36 (2026-10-22)
 
 - One picture per post, always. A post made on a template has exactly one picture, the render of its design: `png` on
