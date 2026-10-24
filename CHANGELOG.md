@@ -3,6 +3,14 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.39 (2026-10-24)
+
+- The duplicate firewall: before every send, each account is checked against the organization's posts of the last 72 hours; an
+  account another post already carries the same text for (a PostProxy id, or a cut send still being checked) is refused with
+  `duplicate_of`, every account a duplicate = `409 duplicate_post` on `create` and `approve` (`allow_duplicate: true` for a deliberate
+  second copy). A send whose every network was cut reads `processing` with `checking: true`, never `failed`: do not create it again.
+  Pinterest takes no comments through PostProxy (like Bluesky): a first comment or thread for it is reported `followups_unsupported`.
+
 ## 1.6.38 (2026-10-23)
 
 - Brand watch: `brand.php?action=hot&all=1` returns every matching post of the window, the rising ones first and then the most

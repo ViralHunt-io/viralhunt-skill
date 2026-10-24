@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.38"
+  version: "1.6.39"
   updated: "2026-10-23"
   api_docs: https://viralhunt.io/api
 ---
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.38` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.39` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -556,6 +556,19 @@ project name, `url`, angle, what you verified, the decision you need. When the s
   it when it is there (`reconciled: true`). `retry` on such a target answers `409 maybe_live`
   unless you send `force: true` after checking the network yourself. To stop it instead:
   `cancel {id, account_id}`.
+- **A send whose EVERY network was cut reads `processing`, never `failed`.** `status: processing`
+  with `checking: true` and an `error_message` that says PostProxy is being checked: the writes may
+  have landed, the sync asks PostProxy three times over six minutes and adopts what it finds. Never
+  create the post again; read it back with `get` after a few minutes.
+- **The same text twice is refused (the duplicate firewall).** Before every send (create, approve,
+  retry, the sync's own retries) each account is checked against the organization's posts of the
+  last 72 hours: when another post already carries the same text for that account (a PostProxy id,
+  or a cut send still being checked), that account is refused with `duplicate_of: <id>` in its
+  result and the other accounts go out; when every account is a duplicate nothing is sent and
+  `create` / `approve` answer `409 duplicate_post` naming the other post. Posts 1287 and 1293
+  (2026-10-24): the first send was cut by PostProxy's gateway, the row read "failed", the team made
+  the post again, and Facebook and Bluesky got it twice. A real second copy on purpose: repeat with
+  `allow_duplicate: true`. If the OTHER post is the wrong one, `cancel` it first.
 - `POST schedule.php?action=cancel` with `{id, account_id}` stops ONE network: a pending
   automatic retry is halted, a not-yet-published PostProxy post is canceled; a published one
   answers 409 and points at `delete`.
