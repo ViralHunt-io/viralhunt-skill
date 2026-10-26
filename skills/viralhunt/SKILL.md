@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.39"
+  version: "1.6.40"
   updated: "2026-10-23"
   api_docs: https://viralhunt.io/api
 ---
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.39` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.40` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -912,8 +912,16 @@ https URL: pass that URL in `media` and the publishing service fetches it.
   "Their OK publishes" may change only `overrides`, `kind` and `design_fields` (+ `png`, only together
   with `design_fields`) on someone else's post. Editing a post in Review keeps it in Review and makes
   the last verdict stale.
-- **`scheduled`** (accepted by PostProxy, not yet publishing): the change goes to PostProxy too, and
-  PostProxy refuses an edit less than ~5 minutes before publish time (`409`).
+- **`scheduled`** (accepted by PostProxy, not yet publishing): the change goes to the networks' queue
+  too, PER ACCOUNT (since 2026-10-26): each account's own text (its `overrides` copy when it has one,
+  else `body`) and its pictures, fitted for that network, are patched only when they changed; a changed
+  `thread` on X or Threads makes that network's post again (the old one goes only once the new exists);
+  an account added through `target_account_ids`/`networks` is created, one dropped is deleted; the
+  first comment and the per-account comments only change on our side (they are posted after publish).
+  The answer lists `patched`, `recreated`, `added`, `removed` and `refused` (account names) and
+  `warning` when a network kept what it had. Nothing is touched under 6 minutes before the post's time
+  (`409 not_editable`: let it go out, or `cancel` and create again); the same guards as a send apply
+  (`422 text_too_long`, `multiple_pictures`, `media_required`). `overrides` is merged per key here too.
 - **`processing`, `published`, `partial`, `failed`, `canceled`**: no edit. Use `retry {id, account_id}`
   for a failed network, `delete {id, account_id}` to take a published target down, or a new post.
 
@@ -922,7 +930,8 @@ https URL: pass that URL in `media` and the publishing service fetches it.
   If everything already published you get `409 already_published`.
 - **Update:** `POST schedule.php?action=update` — `{"id": 123, "body": "...", "media": ["..."],
   "networks": ["facebook"], "scheduled_at": "2026-08-01T15:30:00Z"}`. Only the fields you send
-  change. The project cannot be changed.
+  change. The project cannot be changed. On a scheduled post the answer says what each network took
+  (`patched`, `recreated`, `added`, `removed`, `refused`); read `refused` before telling the user it is done.
 
 Agent rules:
 - Before editing, `GET schedule.php?action=get&id=123` and read `status` (or `stage`): draft, review

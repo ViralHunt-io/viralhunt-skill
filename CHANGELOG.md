@@ -3,6 +3,14 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.40 (2026-10-26)
+
+- `update` on a SCHEDULED post works per account now: each account's own text (its override) and its pictures, fitted for that
+  network, are patched only when they changed; a changed `thread` on X or Threads makes that network's post again; accounts added are
+  created and dropped ones deleted; the answer lists `patched`, `recreated`, `added`, `removed`, `refused` and a `warning` when a
+  network kept what it had. Nothing is touched under 6 minutes before the post's time (`409 not_editable`); the send's guards answer
+  `422 text_too_long` / `multiple_pictures` / `media_required`. Before this the branch sent `body` to every account over their copies.
+
 ## 1.6.39 (2026-10-24)
 
 - The duplicate firewall: before every send, each account is checked against the organization's posts of the last 72 hours; an
