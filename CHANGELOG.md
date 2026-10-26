@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.41 (2026-10-26)
+
+- Brand webhook `format`: `json` (ours, signed), `discord` or `slack` (a message for that channel's incoming webhook), `auto` reads the
+  URL; `POST {action: "webhook_test", project_id}` sends one sample alert and answers what the receiver said. The guide for people and
+  agents: https://viralhunt.io/webhooks (Discord, Slack, n8n, Make, Zapier, Telegram, your own server, the payload, the recipes).
+
 ## 1.6.40 (2026-10-26)
 
 - `update` on a SCHEDULED post works per account now: each account's own text (its override) and its pictures, fitted for that

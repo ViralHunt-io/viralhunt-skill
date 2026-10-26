@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.40"
+  version: "1.6.41"
   updated: "2026-10-23"
   api_docs: https://viralhunt.io/api
 ---
@@ -178,7 +178,7 @@ publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour 
 shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.40` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.41` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -1063,11 +1063,18 @@ the owners and admins by email and push, and to you through `brand.php`.
 - `GET brand.php?action=alerts&project_id=N[&since=ISO][&unread=1]` → what the brand was already told
   about, newest first; `POST {action: "alerts_read", ids: [...]}` marks what you took. Poll every 10
   to 30 minutes with `since` = your last read, or set a webhook.
-- **Webhook:** `POST brand.php {action: "webhook", project_id, url: "https://…"}` (owner or admin).
-  When the cron writes new alerts for that brand it POSTs them as JSON to the URL within the same
-  minute, with `X-VH-Signature: sha256=<hex HMAC-SHA256 of the raw body with the secret>` (the
-  secret comes back in the answer). Verify the signature, answer 2xx within 8 seconds; there is no
-  retry, what you missed is in `alerts`. `url: null` clears it.
+- **Webhook:** `POST brand.php {action: "webhook", project_id, url: "https://…", format?: "auto"|
+  "json"|"discord"|"slack"}` (owner or admin). When the cron writes new alerts for that brand it POSTs
+  them to the URL within the same minute. `format` is what arrives: `json` = our body (`event`,
+  `project`, `alerts[]`, `radar_url`) with `X-VH-Signature: sha256=<hex HMAC-SHA256 of the raw body
+  with the secret>` (the secret comes back in the answer), for your own receiver or n8n/Make/Zapier;
+  `discord` or `slack` = a message for that channel's incoming webhook (one embed or section per
+  thread), so a brand is told in a channel with no code in between; `auto` (default) reads a Discord
+  or Slack URL by itself. `POST {action: "webhook_test", project_id}` sends one sample alert (event
+  `brand.test`) and answers what the receiver said (`ok`, `code`, `hint`): run it right after setting
+  a webhook and read the hint to the user. Verify the signature, answer 2xx within 8 seconds; there
+  is no retry, what you missed is in `alerts`. `url: null` clears it. The full guide (Discord, Slack,
+  n8n, Telegram, your own server, the payload, the recipes): https://viralhunt.io/webhooks.
 
 The standing job: every 15 minutes read `hot` (or receive the webhook), keep the threads with
 `delta` ≥ 10 the brand has not commented in, draft a useful comment for each (facts, the brand's
