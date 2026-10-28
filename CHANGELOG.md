@@ -3,6 +3,13 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.42 (2026-10-28)
+
+- Section 8e: tasks people ask you from the composer's "Ask an agent" box. `GET agent-tasks.php` (your open tasks with the post's
+  context, the project's voice, the per-network limits and the reply schema; claimed as you read), `POST agent-tasks.php {action:
+  "reply", id, text, fields, image, warnings}` (or a `status: "working"` progress line, or `error`). The browser applies `fields` with
+  Undo; the person saves. Poll every minute as that organization's agent; a task expires at 15 minutes.
+
 ## 1.6.41 (2026-10-26)
 
 - Brand webhook `format`: `json` (ours, signed), `discord` or `slack` (a message for that channel's incoming webhook), `auto` reads the
