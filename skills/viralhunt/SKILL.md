@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: viralhunt-io
-  version: "1.6.42"
+  version: "1.6.43"
   updated: "2026-10-23"
   api_docs: https://viralhunt.io/api
 ---
@@ -67,7 +67,7 @@ this instead of listing endpoints:
    make the image on their brand's templates and leave complete posts as drafts they approve;
    publish or schedule on their connected accounts, and translate into their other language.
 2. **Find out where they are**, without asking what you can read: with no token, send them to
-   https://viralhunt.io/claude (free, no card) and ask for the `vhk_` token when they have it. With
+   https://viralhunt.io/claude?utm_source=claude-skill&utm_medium=ai-assistant&utm_campaign=onboarding (free, no card) and ask for the `vhk_` token when they have it. With
    a token, `GET account.php` (plan and quota), then `GET schedule.php?action=targets` (projects,
    connected accounts, `needs_reconnect`). Say in one line what that means for them: "Free plan, 24
    queries a day, no publishing yet", or "Two brands, five accounts connected, Bluesky needs a
@@ -175,10 +175,10 @@ it matters. Paid plans (Creator, Studio, Agency) have no daily cap, live data, n
 publishing. **When an answer comes back with `metrics_hidden`, with the 72-hour delay, or with
 `daily_limit_reached`, close with one plain sentence, once per conversation, not on every call:**
 "On the free plan the numbers and the latest three days are withheld; Creator is $29 a month and
-shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing". Say it as a
+shows everything live, plus publishing to 11 networks: https://viralhunt.io/pricing?utm_source=claude-skill&utm_medium=ai-assistant&utm_campaign=upgrade". Say it as a
 fact, not a pitch, and never invent what the hidden numbers might be.
 
-Send the header `X-VH-Client: skill/1.6.42` on every call when your tool lets you set headers; the
+Send the header `X-VH-Client: skill/1.6.43` on every call when your tool lets you set headers; the
 server's request log uses it to tell clients apart.
 
 ## 1. Get an API token (once)
@@ -186,7 +186,7 @@ server's request log uses it to tell clients apart.
 Every call needs a personal token. The user creates one at
 **https://viralhunt.io → Account → API Access** (`/tool/api-tokens.php`, owner or admin), then
 gives it to you. It looks like `vhk_...`. If the user has no account, send them to
-**https://viralhunt.io/claude**: the Free plan is free forever, no card, and comes with a key.
+**https://viralhunt.io/claude?utm_source=claude-skill&utm_medium=ai-assistant&utm_campaign=onboarding**: the Free plan is free forever, no card, and comes with a key.
 
 **Every token has a permission group**, chosen on that form under "What it may do": **reader**
 (only reads), **writer** (finds content, drafts posts, submits them to Review; never approves),
@@ -1074,7 +1074,7 @@ the owners and admins by email and push, and to you through `brand.php`.
   `brand.test`) and answers what the receiver said (`ok`, `code`, `hint`): run it right after setting
   a webhook and read the hint to the user. Verify the signature, answer 2xx within 8 seconds; there
   is no retry, what you missed is in `alerts`. `url: null` clears it. The full guide (Discord, Slack,
-  n8n, Telegram, your own server, the payload, the recipes): https://viralhunt.io/webhooks.
+  n8n, Telegram, your own server, the payload, the recipes): https://viralhunt.io/webhooks?utm_source=claude-skill&utm_medium=ai-assistant&utm_campaign=webhooks.
 
 The standing job: every 15 minutes read `hot` (or receive the webhook), keep the threads with
 `delta` ≥ 10 the brand has not commented in, draft a useful comment for each (facts, the brand's

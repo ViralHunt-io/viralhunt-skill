@@ -1,7 +1,7 @@
 {
   "name": "viralhunt",
   "displayName": "ViralHunt",
-  "version": "1.6.42",
+  "version": "1.6.43",
   "repository": "https://github.com/viralhunt-io/viralhunt-skill",
   "license": "MIT",
   "privacyPolicyUrl": "https://viralhunt.io/privacy",
@@ -11,7 +11,7 @@
     "name": "ViralHunt",
     "url": "https://viralhunt.io"
   },
-  "homepage": "https://viralhunt.io",
+  "homepage": "https://viralhunt.io/?utm_source=claude-plugins&utm_medium=directory&utm_campaign=plugin-listing",
   "keywords": [
     "social-media",
     "trending",

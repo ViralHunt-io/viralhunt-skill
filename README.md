@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://viralhunt.io"><img src="icon.png" width="96" height="96" alt="ViralHunt"></a>
+  <a href="https://viralhunt.io/?utm_source=github&utm_medium=directory&utm_campaign=skill-readme"><img src="icon.png" width="96" height="96" alt="ViralHunt"></a>
 </p>
 
 <h1 align="center">ViralHunt Skill</h1>
@@ -15,7 +15,7 @@
   <a href="https://viralhunt.io/api"><img alt="API v1" src="https://img.shields.io/badge/API-v1-5468ff?style=flat-square"></a>
   <a href="https://www.npmjs.com/package/viralhunt-mcp"><img alt="MCP server" src="https://img.shields.io/badge/MCP-viralhunt--mcp-8c5cff?style=flat-square"></a>
   <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-2ea44f?style=flat-square"></a>
-  <a href="https://viralhunt.io/claude"><img alt="free plan" src="https://img.shields.io/badge/free%20plan-no%20card-ff2f7b?style=flat-square"></a>
+  <a href="https://viralhunt.io/claude?utm_source=github&utm_medium=directory&utm_campaign=skill-readme"><img alt="free plan" src="https://img.shields.io/badge/free%20plan-no%20card-ff2f7b?style=flat-square"></a>
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 
 ## What ViralHunt is
 
-[ViralHunt](https://viralhunt.io) is a **trending-content radar and a cross-network publisher** built for
+[ViralHunt](https://viralhunt.io/?utm_source=github&utm_medium=directory&utm_campaign=skill-readme) is a **trending-content radar and a cross-network publisher** built for
 teams and for the agents that work with them. It measures what is gaining velocity on twelve networks
 and in the news, tells you when and where to post it, holds the brand's image templates, keeps a
 review queue (drafts) where humans and agents check each other's work, and publishes to eleven networks
@@ -72,7 +72,7 @@ and a token.
 
 **Get a token in two minutes**
 
-1. Create the account at **https://viralhunt.io/claude**. The Free plan is free forever, no card, 24
+1. Create the account at **https://viralhunt.io/claude?utm_source=github&utm_medium=directory&utm_campaign=skill-readme**. The Free plan is free forever, no card, 24
    content queries a day.
 2. In the app, **Account → API Access → New token**. It looks like `vhk_…`. An owner or admin can also
    create an **agent member**: a token bound to a virtual teammate with its own name, which can be
@@ -319,7 +319,7 @@ on the Official MCP Registry) exposes the same API as 32 tools.
 
 ## Links
 
-- Website: https://viralhunt.io
+- Website: https://viralhunt.io/?utm_source=github&utm_medium=directory&utm_campaign=skill-readme
 - Documentation (API reference): https://viralhunt.io/api
 - Support: support@viralhunt.io
 - Privacy policy: https://viralhunt.io/privacy

@@ -3,6 +3,12 @@
 All notable changes to the ViralHunt agent skill. Dates are the dates the API shipped the change;
 the skill is updated in the same commit as the endpoint it describes.
 
+## 1.6.43 (2026-11-12)
+
+- The links to viralhunt.io the agent hands the person (/claude to sign up, /pricing to upgrade, /webhooks) carry utm
+  (`utm_source=claude-skill`, `utm_medium=ai-assistant`), and the README and plugin homepage carry their own, so a sign-up
+  that came through the skill is counted as such instead of "direct". Nothing else changes.
+
 ## 1.6.42 (2026-10-28)
 
 - Section 8e: tasks people ask you from the composer's "Ask an agent" box. `GET agent-tasks.php` (your open tasks with the post's
